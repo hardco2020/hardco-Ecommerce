@@ -2,14 +2,16 @@
 
 ## Learning Goal
 
-
 - Build same application also with React-Native
 - Better use of Typescript
 - MongoDB
 - Learn how to utilize cache
 - Perform lazy loading
 - Learn how to write unite test and integration test regarding to front-end test and back-end test
-- Styled components 
+### Styled components 
+    - Typescript should also install @types/styled-components
+    - install vscode-styled-components extension to do the autocomplete
+    - components will not conflict if we use styled components
 - Stripe API 
 
 ## System Structrue
