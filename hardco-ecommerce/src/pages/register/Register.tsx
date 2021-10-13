@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { mobile } from '../../responsive'
+import FacebookLogin from 'react-facebook-login';
+
 
 const Container = styled.div`
     width: 100vw;
@@ -19,12 +21,19 @@ const Wrapper = styled.div`
     padding: 20px;
     width: 40%;
     background-color: white;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     ${mobile({width:"75%"})};
 `
 const Title = styled.h1`
     font-size: 24px;
     font-weight: 300;
 
+`
+const ThirdLogin = styled.div`
+    margin:10px 0px;
 `
 const Form = styled.div`
     display: flex;
@@ -50,10 +59,21 @@ const Button = styled.button`
 `
 
 const Register = () => {
+    const responseFacebook = (response:any) => {
+        console.log(response);
+    }   
     return (
         <Container>
             <Wrapper>
                 <Title>CREATE AN ACCOUNT</Title>
+                <ThirdLogin>
+                    <FacebookLogin
+                    appId="415876120207477"
+                    autoLoad={true}
+                    fields="name,email,picture"
+                    //onClick={componentClicked}
+                    callback={responseFacebook} />
+                </ThirdLogin>
                 <Form>
                     <Input placeholder="name"/>
                     <Input placeholder="last name"/>
