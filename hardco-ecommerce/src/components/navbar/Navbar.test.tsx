@@ -1,11 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import App from './App';
 import "@testing-library/jest-dom/extend-expect"
+import Navbar from  './Navbar'
 
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/hello world/i);
+test('Render Logo', () => {
+  render(<Navbar/>);
+  const linkElement = screen.getByText(/hardco/i);
   expect(linkElement).toBeInTheDocument();
 });
+
