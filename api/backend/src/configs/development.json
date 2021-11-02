@@ -1,0 +1,27 @@
+{
+    "env": "development",
+    "dbConfig": {
+        "host": "localhost",
+        "database": "mongoose",
+        "port": 27017,
+        "DB_USER":"test",
+        "DB_PWD": "12345",
+        "DB_NAME":"ecommerce"
+    },
+    "secretKey": "secretKey",
+    "log": {
+        "format": "dev",
+        "dir": "../logs"
+    },
+    "Facebook":{
+        "id":415876120207477,
+        "secret":"e6909922dd844c6c5b4e133327f17d2a"
+    },
+    "cors": {
+        "origin": "http://localhost:3000",
+        "credentials": true
+    },
+    "Stripe": {
+        "key": "sk_test_51JqHpMEeQ1fnGwzA2JAHkCagNoUDZtyXygpvKAMmEAoukqlv5raf5eWL4n5AcYIpWLXM5mKHdBstF449hTXaWJim00ILy0z54X"
+    }
+}
