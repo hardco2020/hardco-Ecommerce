@@ -50,6 +50,15 @@
 - User can see order detail in their store
 
 
+## Step 
+
+1. Add cart 
+2. Delete cart 
+3. Modify cart amount 
+4. set cart to localstorage 
+5. 
+
+
 
 
 
