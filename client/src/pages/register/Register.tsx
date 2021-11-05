@@ -58,10 +58,10 @@ const Input = styled.input`
   margin: 20px 0px 0px 0px;
   padding: 10px;
 `;
-const Agreement = styled.span`
-  font-size: 12px;
-  margin: 20px 0px;
-`;
+// const Agreement = styled.span`
+//   font-size: 12px;
+//   margin: 20px 0px;
+// `;
 const Button = styled.button`
   margin-top:20px;
   width: 40%;

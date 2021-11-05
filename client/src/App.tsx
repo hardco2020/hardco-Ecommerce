@@ -11,7 +11,6 @@ import {
   Route
 } from "react-router-dom";
 import Success from './pages/success/Success';
-import axios from 'axios';
 
 function App() {
   // console.log(process.env.REACT_APP_API_URL);

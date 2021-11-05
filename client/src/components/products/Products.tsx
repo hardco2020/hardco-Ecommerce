@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { publicRequest } from "../../axiosURL";
-import { Filters, Product, ProductListResponse } from "../../type/type";
+import { Filters, ProductInterface, ProductListResponse } from "../../type/type";
 import ProductItem from "../productItem/ProductItem";
 const Container = styled.div`
   padding: 20px;
@@ -16,8 +16,8 @@ interface ProductsInterface {
 }
 
 const Products = ({ cat, filters, sort }: ProductsInterface) => {
-  const [products, setProducts] = useState<Product[]>();
-  const [filterProducts, setFilterProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductInterface[]>();
+  const [filterProducts, setFilterProducts] = useState<ProductInterface[]>([]);
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -55,14 +55,15 @@ const Products = ({ cat, filters, sort }: ProductsInterface) => {
       setFilterProducts((prev) => [...prev].sort((a, b) => b.price - a.price));
     }
   }, [sort]);
+
   return (
     <Container>
       {cat
-        ? filterProducts.map((item: Product) => (
+        ? filterProducts.map((item: ProductInterface) => (
             <ProductItem item={item} key={item._id} />
           ))
         : products &&
-          products.map((item: Product) => (
+          products.map((item: ProductInterface) => (
             <ProductItem item={item} key={item._id} />
           ))}
       {/* : products && products.slice(0,8).map((item: Product) => (

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import Announcement from "../../components/announcement/Announcement";
 import Footer from "../../components/footer/Footer";
 import Navbar from "../../components/navbar/Navbar";
+import Stripe from "../../components/stripe/Stripe";
+import { useAppSelector } from "../../redux/hook";
 import { mobile } from "../../responsive";
 
 interface ButtonFilledProp {
@@ -72,8 +74,16 @@ const ProductDetail = styled.div`
   flex: 2;
   display: flex;
 `;
-const Image = styled.img`
+const ProductImgContainer = styled.div`
   width: 200px;
+  height: 200px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+`
+const Image = styled.img`
+  width: 70%;
+  height: 70%;
 `;
 const Details = styled.div`
   padding: 20px;
@@ -140,15 +150,10 @@ const SummaryItem = styled.div<TotalItemProp>`
 `
 const SummaryItemText = styled.span``
 const SummaryItemPrice = styled.span``
-const SummaryButton = styled.button`
-    width: 100%;
-    padding: 10px;
-    background-color: black;
-    color:white;
-`
 
 
 const Cart = () => {
+  const cart = useAppSelector(state=>state.cart);
   return (
     <Container>
       <Navbar />
@@ -165,63 +170,45 @@ const Cart = () => {
         </Top>
         <Bottom>
           <Info>
+          {cart.products.map(product=>(
+            <>
             <Product>
               <ProductDetail>
-                <Image src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" />
+                <ProductImgContainer>
+                <Image src={product.product.img}/>
+                </ProductImgContainer>
                 <Details>
                   <ProductName>
-                    <b>Product:</b>JESSIE THUNDER SHOES
+                    <b>Product:</b>{product.product.title}
                   </ProductName>
                   <ProductId>
-                    <b>ID:</b>93813718293
+                    <b>ID:</b>{product.product._id}
                   </ProductId>
-                  <ProductColor color="black" />
+                  <ProductColor color={product.product.color} />
                   <ProductSize>
-                    <b>Size:</b>37.5
+                    <b>Size:</b>{product.product.size}
                   </ProductSize>
                 </Details>
               </ProductDetail>
               <PriceDetail>
                 <ProductAmountContainer>
                   <Add />
-                  <ProductAmount>2</ProductAmount>
+                  <ProductAmount>{product.quantity}</ProductAmount>
                   <Remove />
                 </ProductAmountContainer>
-                <ProductPrice>$30</ProductPrice>
+                <ProductPrice>$ {product.product.price*product.quantity}</ProductPrice>
               </PriceDetail>
             </Product>
-            <Hr />
-            <Product>
-              <ProductDetail>
-                <Image src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" />
-                <Details>
-                  <ProductName>
-                    <b>Product:</b> HAKURA T-SHIRT
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                  <ProductColor color="gray" />
-                  <ProductSize>
-                    <b>Size:</b> M
-                  </ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>1</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$ 20</ProductPrice>
-              </PriceDetail>
-            </Product>
+            <Hr/> 
+            </> 
+          ))}
+
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
                 <SummaryItemText>Subtotal</SummaryItemText>
-                <SummaryItemPrice>$ 80</SummaryItemPrice>
+                <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
                 <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -233,9 +220,9 @@ const Cart = () => {
             </SummaryItem>
             <SummaryItem types="total">
                 <SummaryItemText>Total</SummaryItemText>
-                <SummaryItemPrice>$ 80</SummaryItemPrice>
+                <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
             </SummaryItem>
-            <SummaryButton>CHECKOUT NOW</SummaryButton>
+            <Stripe total={cart.total} disabled={cart.total===0}/>
           </Summary>
         </Bottom>
       </Wrapper>

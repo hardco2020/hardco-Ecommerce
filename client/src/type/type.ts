@@ -10,13 +10,13 @@ export interface Filters{
 
 export type ProductListResponse = {
     message: string,
-    data: Array<Product>
+    data: Array<ProductInterface>
 }
 export type ProductResponse = {
     message: string,
-    data: Product
+    data: ProductInterface
 }
-export interface Product {
+export interface ProductInterface {
     _id: string;
     title: string;
     desc: string;

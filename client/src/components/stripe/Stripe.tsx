@@ -1,28 +1,33 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import StripeCheckout from "react-stripe-checkout";
 import styled from "styled-components";
 import logo from "../../assets/Eden.png"
+import { publicRequest } from "../../axiosURL";
 
-const Container = styled.div`
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+interface StripeProps{
+  total:number;
+  disabled:boolean;
+}
+// const Container = styled.div`
+//   height: 100vh;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
 const Button = styled.button`
   border: none;
-  width: 120;
+  width: 100%;
+  padding: 10px;
   background-color: black;
   color: white;
   cursor: pointer;
-  padding: 20px;
   border-radius: 5;
+  font-size:20px;
   font-weight: 600;
 `;
-const KEY = "pk_test_51JqHpMEeQ1fnGwzAspOcdA5bo0nFxJ1SCKtCLAUmFFdjd86vMcja6sMwzT18zd8sdk5B1datGQUboVXPSwyq0DOq00Lz1qkays"
-const Stripe = () => {
+const KEY = process.env.REACT_APP_STRIPE_KEY!
+const Stripe = ({total,disabled} : StripeProps) => {
     const history = useHistory();
     const [stripeToken,setStripeToken] = useState<any | null>(null);
     const onToken = (token:object) =>{
@@ -33,10 +38,9 @@ const Stripe = () => {
         const makeRequest = async()=>{
             try{
                 if(stripeToken){
-                const url:string = process.env.REACT_APP_API_URL!;
-                const res = await axios.post(`${url}/stripe/payment`,{
+                const res = await publicRequest.post(`/stripe/payment`,{
                     tokenId: stripeToken.id,
-                    amount: 2000,
+                    amount: {total},
                 })
                 console.log(res.data)
                 history.push('/success');
@@ -48,7 +52,8 @@ const Stripe = () => {
         makeRequest();
     },[stripeToken, history])
   return (
-    <Container>
+    // <Container>
+    <>
         {stripeToken ? (<span>Processing. Please wait...</span>):
         (
       <StripeCheckout
@@ -56,14 +61,16 @@ const Stripe = () => {
         image={logo}
         billingAddress
         shippingAddress
-        description = "Your total is $20"
-        amount={2000}
+        description = {`Your total is ${total}`}
+        amount={total*100}
         token={onToken}
         stripeKey={KEY}
       >
-        <Button>Pay now</Button>
+        <Button disabled={disabled}>Pay now</Button>
       </StripeCheckout>)}
-    </Container>
+    </>
+    // </Container>
+
   );
 };
 

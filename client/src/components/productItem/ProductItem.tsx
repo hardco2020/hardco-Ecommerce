@@ -2,7 +2,7 @@ import { FavoriteBorderOutlined, SearchOutlined, ShoppingCartOutlined } from '@m
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Product } from '../../type/type'
+import { ProductInterface } from '../../type/type'
 
 const Info = styled.div`
     opacity: 0;
@@ -65,7 +65,7 @@ const Icon = styled.div`
 `
 
 export interface ProductItemProp{
-    item:Product
+    item:ProductInterface
 }
 const ProductItem = ({item}:ProductItemProp) => {
     return (

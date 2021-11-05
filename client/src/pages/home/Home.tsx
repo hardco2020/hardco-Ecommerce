@@ -6,17 +6,15 @@ import Navbar from '../../components/navbar/Navbar'
 import Newsletter from '../../components/newsletter/Newsletter'
 import Products from '../../components/products/Products'
 import Slider from '../../components/slider/Slider'
-import Stripe from '../../components/stripe/Stripe'
 const Home = () => {
     return (
         <div>
-            <Announcement/>
             <Navbar/>
+            <Announcement/>
             <Slider/>
             <Categories/>
             <Products/>
             <Newsletter/>
-            <Stripe/>
             <Footer/>
         </div> 
     )

@@ -7,8 +7,10 @@ import Announcement from "../../components/announcement/Announcement";
 import Footer from "../../components/footer/Footer";
 import Navbar from "../../components/navbar/Navbar";
 import Newsletter from "../../components/newsletter/Newsletter";
+import { addProduct, CartSingleProdudctInterface } from "../../redux/cartRedux";
+import { useAppDispatch } from "../../redux/hook";
 import { mobile } from "../../responsive";
-import { Product as ProductInterface, ProductResponse } from "../../type/type";
+import { ProductInterface, ProductResponse } from "../../type/type";
 interface FilterColorProps {
   color: string;
 }
@@ -33,7 +35,7 @@ const InfoContainer = styled.div`
   ${mobile({ padding: "10px" })};
 `;
 const Title = styled.h1`
-  font-weight: 200;
+  font-weight: 500;
 `;
 const Desc = styled.div`
   margin: 20px 0px;
@@ -42,34 +44,78 @@ const Price = styled.div`
   font-weight: 100;
   font-size: 40px;
 `;
+
+const Line = styled.hr`
+    margin: 20px 0px;
+    border-top: 2px solid black;
+`
 const FilterContainer = styled.div`
   width: 50%;
   margin: 30px 0px;
   display: flex;
+  flex-direction: column;
+  align-items: space-between;
   justify-content: space-between;
   ${mobile({ width: "100%" })};
 `;
 const Filter = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 `;
 const FilterTitle = styled.span`
   font-size: 20px;
-  font-weight: 200;
+  font-weight: 500;
+  margin-right:10px;
 `;
 const FilterColor = styled.div<FilterColorProps>`
+  width: 30px;
+  height: 30px; 
+  background-color: ${(props) => props.color};
+  margin: 0px 10px;
+  cursor: pointer;
+  display :flex;
+  align-items: center;
+`;
+const FilterColorSelected = styled.div<FilterColorProps>`
+  width: 30px;
+  height: 30px; 
+  background-color: ${(props) => props.color};
+  margin: 0px 10px;
+  cursor: pointer;
+  display :flex;
+  align-items: center;
+  border: 3px solid black;
+`;
+const FilterSizeDiv = styled.div`
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  margin: 0px 5px;
+  margin: 0px 10px;
   cursor: pointer;
+  display:flex;
+  align-items: center;
+  border : 2px solid lightgray;
+  justify-content: center;
+  border-radius : 5px;
+  padding:5px 10px;
 `;
-const FilterSize = styled.select`
-  margin-left: 10px;
-  padding: 5px;
+const FilterSizeDivSelected = styled.div`
+  width: 20px;
+  height: 20px;
+  margin: 0px 10px;
+  cursor: pointer;
+  display:flex;
+  align-items: center;
+  border : 3px solid black;
+  justify-content: center;
+  border-radius : 5px;
+  padding:5px 10px;
 `;
-const FilterSizeOption = styled.option``;
+// const FilterSize = styled.select`
+//   margin-left: 10px;
+//   padding: 5px;
+// `;
+// const FilterSizeOption = styled.option``;
 
 const AddContainer = styled.div`
   display: flex;
@@ -96,7 +142,8 @@ const Amount = styled.span`
 const Button = styled.button`
   padding: 15px;
   border: 1px solid teal;
-  background-color: white;
+  background-color: black;
+  color:white;
   cursor: pointer;
   font-weight: 500;
 `;
@@ -107,7 +154,8 @@ const Product = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [color, setColor] = useState<string>();
   const [size, setSize] = useState<string>();
-  console.log(color,size);
+  //Redux----------------
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -129,7 +177,12 @@ const Product = () => {
     }
   }
   const handleClick = ()=>{
-      //update cart
+    let singleProduct:CartSingleProdudctInterface;
+    if(product && color && size){
+        singleProduct= { ...product,color,size}
+        dispatch(addProduct({product:singleProduct,quantity}))
+    }
+    //   product&& color && size  && dispatch(addProduct({singleProduct,quantity}))
   }
 
   return (
@@ -137,7 +190,7 @@ const Product = () => {
       <Navbar />
       <Announcement />
       {product && (
-        <Wrapper>
+        <Wrapper key={product._id}>
           <ImgContainer>
             <Image src={product.img} />
           </ImgContainer>
@@ -145,29 +198,41 @@ const Product = () => {
             <Title>{product.title}</Title>
             <Desc>{product.desc}</Desc>
             <Price>$ {product.price}</Price>
+            <Line></Line>
             <FilterContainer>
               <Filter>
                 <FilterTitle>Color</FilterTitle>
                 {product.color?.map((c) => (
-                  <FilterColor color={c} key={c} onClick={()=>setColor(c)} />
+                  color ===c  ? <FilterColorSelected color={c} key={c} onClick={()=>setColor(c)} />
+                             :<FilterColor color={c} key={c} onClick={()=>setColor(c)} />
                 ))}
               </Filter>
               <Filter>
+                <FilterTitle>Size </FilterTitle>
+                {product.size?.map((s) => (
+                    size === s ? <FilterSizeDivSelected onClick={()=>setSize(s) } key={s} >{s}</FilterSizeDivSelected>
+                                : <FilterSizeDiv onClick={()=>setSize(s)} key={s} >{s}</FilterSizeDiv>
+                ))}
+              </Filter>
+              {/* <Filter>
                 <FilterTitle>Size</FilterTitle>
                 <FilterSize onChange={(e)=>setSize(e.target.value)}>
                   {product.size?.map((s) => (
                     <FilterSizeOption>{s}</FilterSizeOption>
                   ))}
                 </FilterSize>
-              </Filter>
+              </Filter> */}
             </FilterContainer>
             <AddContainer>
+              <FilterTitle>數量</FilterTitle>
               <AmountContainer>
                 <Remove onClick={()=>handleQuantity("dec")} style={{cursor:"pointer"}}/>
                 <Amount>{quantity}</Amount>
                 <Add onClick={()=>handleQuantity("inc")} style={{cursor:"pointer"}} />
               </AmountContainer>
-              <Button onClick={()=>handleClick()}>ADD TO CART</Button>
+              <Button 
+                disabled={!color || !size}
+                onClick={()=>handleClick()}>ADD TO CART</Button>
             </AddContainer>
           </InfoContainer>
         </Wrapper>

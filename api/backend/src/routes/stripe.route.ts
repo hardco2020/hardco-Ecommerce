@@ -5,6 +5,7 @@ import { Routes } from '@interfaces/routes.interface';
 // import validationMiddleware from '@middlewares/validation.middleware';
 // import authMiddlewareAdmin from '@/middlewares/authAdmin.middleware';
 import StripeController from '@/controllers/stripe.controller';
+import authMiddlewareUser from '@/middlewares/authUser.middleware';
 
 class StripeRoute implements Routes {
   public path = '/stripe';
@@ -16,7 +17,7 @@ class StripeRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/payment`, this.stripeController.pay);
+    this.router.post(`${this.path}/payment`, authMiddlewareUser, this.stripeController.pay);
   }
 }
 
