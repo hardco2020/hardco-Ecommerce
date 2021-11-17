@@ -10,10 +10,10 @@ const authMiddlewareUser = async (req: RequestWithUser, res: Response, next: Nex
     } else {
       next(new HttpException(401, 'You are not allowed to do that!'));
     }
-    if (req.user._id === req.params.id || req.user.isAdmin) {
+    if (req.user._id.toString() === req.params.id.toString() || req.user.isAdmin) {
       next();
     } else {
-      next(new HttpException(401, 'You are not allowed to do that!'));
+      next(new HttpException(401, 'You are not allowed to do that !!'));
     }
   });
 };

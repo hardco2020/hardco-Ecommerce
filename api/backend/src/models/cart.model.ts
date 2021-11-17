@@ -9,8 +9,37 @@ const CartSchema: Schema = new Schema(
     },
     products: [
       {
-        productId: {
-          type: String,
+        product: {
+          _id: {
+            type: String,
+          },
+          title: {
+            type: String,
+          },
+          desc: {
+            type: String,
+          },
+          img: {
+            type: String,
+          },
+          categories: {
+            type: Array,
+          },
+          price: {
+            type: Number,
+          },
+          createdAt: {
+            type: String,
+          },
+          updatedAt: {
+            type: String,
+          },
+          size: {
+            type: String,
+          },
+          color: {
+            type: String,
+          },
         },
         quantity: {
           type: Number,
@@ -18,6 +47,12 @@ const CartSchema: Schema = new Schema(
         },
       },
     ],
+    quantity: {
+      type: Number,
+    },
+    total: {
+      type: Number,
+    },
   },
   { timestamps: true },
 );

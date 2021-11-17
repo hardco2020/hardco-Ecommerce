@@ -1,8 +1,24 @@
 export interface Cart {
   userId: string;
   products: CartProduct[];
+  quantity: number;
+  total: number;
 }
 export interface CartProduct {
-  productId: string;
+  product: CartSingleProduct[];
   quantity: number;
+}
+
+export interface CartSingleProduct {
+  _id: string;
+  title: string;
+  desc: string;
+  img: string;
+  categories?: string[];
+  price: number;
+  createdAt: any;
+  updatedAt: any;
+  //---------------
+  size: string;
+  color: string;
 }

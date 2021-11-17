@@ -18,7 +18,7 @@ class CartRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}`, [validationMiddleware(CreateCartDto, 'body'), authMiddleware], this.cartController.createNewCart);
-    this.router.put(`${this.path}/:id`, [validationMiddleware(CreateCartDto, 'body'), authMiddlewareUser], this.cartController.updateCart);
+    this.router.put(`${this.path}/:id`, [validationMiddleware(CreateCartDto, 'body'), authMiddleware], this.cartController.updateCart);
     this.router.delete(`${this.path}/:id`, authMiddlewareUser, this.cartController.deleteCart);
     this.router.get(`${this.path}/:id`, authMiddlewareUser, this.cartController.getUserCart);
     this.router.get(`${this.path}`, authMiddlewareAdmin, this.cartController.getAllCart);

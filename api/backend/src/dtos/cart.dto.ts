@@ -1,5 +1,5 @@
 import { CartProduct } from '@/interfaces/cart.interface';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateCartDto {
   @IsString()
@@ -7,4 +7,10 @@ export class CreateCartDto {
 
   @IsArray()
   public products: CartProduct[];
+
+  @IsNumber()
+  public total: number;
+
+  @IsNumber()
+  public quantity: number;
 }

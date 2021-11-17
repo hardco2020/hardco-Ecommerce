@@ -1,16 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { Close, Search, ShoppingCartOutlined } from "@material-ui/icons";
+import { Close, ExitToApp, Search, ShoppingCartOutlined } from "@material-ui/icons";
 import { Badge, Popover } from "@material-ui/core";
 import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
-import jwt_decode from "jwt-decode";
-import { useAppSelector } from "../../redux/hook";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { deleteProduct } from "../../redux/cartRedux";
 
 interface ColorProps {
-    color: string;
-  }
+  color: string;
+}
 const Container = styled.div`
   height: 60px;
   ${mobile({ height: "50px" })}
@@ -108,7 +107,7 @@ const CartPayButton = styled.button`
   background-color: black;
   color: white;
   padding: 5px;
-  cursor:pointer;
+  cursor: pointer;
 `;
 const CartLine = styled.hr`
   border: 1px solid black;
@@ -138,27 +137,25 @@ const CartProductNameContainer = styled.div`
 `;
 const CartProductName = styled.span``;
 const CartProductQuantityContainer = styled.div`
-  flex:1;
+  flex: 1;
   padding: 5px;
   display: flex;
   align-items: center;
 `;
 const CartProductColor = styled.div<ColorProps>`
   width: 30px;
-  height: 30px; 
+  height: 30px;
   background-color: ${(props) => props.color};
   cursor: pointer;
-  display :flex;
+  display: flex;
   align-items: center;
 `;
 const CartProductQuantity = styled.span``;
 
 const Navbar = () => {
   const cart = useAppSelector((state) => state.cart);
-  const token = Cookies.get("Authorization");
-  if (token !== undefined) {
-    console.log(jwt_decode(token));
-  }
+  const user = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLDivElement) | null
   >(null);
@@ -170,7 +167,10 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem('persist:root')
+    window.location.reload()
+  }
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -190,19 +190,28 @@ const Navbar = () => {
           </Link>
         </Center>
         <Right>
-          {}
-          <Link
-            to="/register"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <MenuItem>REGISTER</MenuItem>
-          </Link>
-          <Link
-            to="/login"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <MenuItem>SIGN IN</MenuItem>
-          </Link>
+          {user.user !== null ? (
+            <>
+              <MenuItem>Hello {user.user?.username} </MenuItem>{" "}
+              <ExitToApp style={{cursor:"pointer",marginLeft:"10px"}} onClick={()=>handleLogout()}/>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/register"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <MenuItem>REGISTER</MenuItem>
+              </Link>
+              <Link
+                to="/login"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <MenuItem>SIGN IN</MenuItem>
+              </Link>
+            </>
+          )}
+
           {/* <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}> */}
           <MenuItem aria-describedby={id} onClick={(e) => handleClick(e)}>
             <Badge badgeContent={cart.quantity} color="primary">
@@ -227,8 +236,11 @@ const Navbar = () => {
                     <CartTitle>購物清單</CartTitle>
                   </CartTitleLeft>
                   <CartTitleRight>
-                    <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>
-                        <CartPayButton >前往結賬</CartPayButton>
+                    <Link
+                      to="/cart"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <CartPayButton>前往結賬</CartPayButton>
                     </Link>
                   </CartTitleRight>
                 </CartTitleContainer>
@@ -236,7 +248,9 @@ const Navbar = () => {
                 <CartProductContainer>
                   {cart &&
                     cart.products.map((c) => (
-                      <CartSingleProductContainer key={c.product._id+c.product.color+c.product.size}>
+                      <CartSingleProductContainer
+                        key={c.product._id + c.product.color + c.product.size}
+                      >
                         <CartProductImg src={c.product.img} />
                         <CartProductNameContainer>
                           <CartProductName>{c.product.title}</CartProductName>
@@ -247,15 +261,19 @@ const Navbar = () => {
                           </CartProductQuantity>
                         </CartProductQuantityContainer>
                         <CartProductQuantityContainer>
-                          <CartProductColor color={c.product.color} >
-                          </CartProductColor>
+                          <CartProductColor
+                            color={c.product.color}
+                          ></CartProductColor>
                         </CartProductQuantityContainer>
                         <CartProductQuantityContainer>
                           <CartProductQuantity>
                             {c.product.size}
                           </CartProductQuantity>
                         </CartProductQuantityContainer>
-                        <Close style={{ cursor: "pointer" }} />
+                        <Close
+                          style={{ cursor: "pointer" }}
+                          onClick={() => dispatch(deleteProduct(c))}
+                        />
                       </CartSingleProductContainer>
                     ))}
                 </CartProductContainer>
