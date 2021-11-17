@@ -17,7 +17,7 @@ class CartService {
       throw new HttpException(409, 'CartId not valid');
     }
     if (isEmpty(CartData)) throw new HttpException(400, 'Update CartData is empty');
-    const updateCartById: Cart = await this.cart.findByIdAndUpdate(CartId, { ...CartData }, { new: true });
+    const updateCartById: Cart = await this.cart.findOneAndUpdate({ userId: CartId }, { ...CartData }, { upsert: true, new: true });
     console.log(updateCartById);
     if (!updateCartById) throw new HttpException(409, 'CartData not found');
     return updateCartById;

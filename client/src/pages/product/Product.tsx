@@ -8,7 +8,8 @@ import Footer from "../../components/footer/Footer";
 import Navbar from "../../components/navbar/Navbar";
 import Newsletter from "../../components/newsletter/Newsletter";
 import { addProduct, CartSingleProdudctInterface } from "../../redux/cartRedux";
-import { useAppDispatch } from "../../redux/hook";
+import { usePutCartByIDMutation } from "../../redux/api"
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { mobile } from "../../responsive";
 import { ProductInterface, ProductResponse } from "../../type/type";
 interface FilterColorProps {
@@ -149,6 +150,9 @@ const Button = styled.button`
 `;
 const Product = () => {
   const location = useLocation();
+  const cart = useAppSelector(state=>state.cart);
+  const user = useAppSelector(state=>state.auth);
+  const [putCartAction] = usePutCartByIDMutation();
   const productId = location.pathname.split("/")[2];
   const [product, setProduct] = useState<ProductInterface>();
   const [quantity, setQuantity] = useState<number>(1);
@@ -168,6 +172,18 @@ const Product = () => {
     getProduct();
   }, [productId]);
 
+  useEffect(() => {
+    //只要動到dispatch就確認是否是登入 登入的話就使用rtk query 
+    if (user.user!==null){
+      const putCart = async() =>{
+        //console.log(cart)
+        const res = await putCartAction({id: user.user!._id!,cart:cart})
+        console.log(res)
+      }
+      putCart()
+    }
+  }, [dispatch,cart])
+
   const handleQuantity = (type: string) => {
     if(type === "dec"){
         quantity > 1 && setQuantity(quantity-1)
@@ -176,14 +192,15 @@ const Product = () => {
         setQuantity(quantity+1)
     }
   }
-  const handleClick = ()=>{
+  const handleClick = async ()=>{
     let singleProduct:CartSingleProdudctInterface;
     if(product && color && size){
         singleProduct= { ...product,color,size}
-        dispatch(addProduct({product:singleProduct,quantity}))
+        await dispatch(addProduct({product:singleProduct,quantity}))
     }
     //   product&& color && size  && dispatch(addProduct({singleProduct,quantity}))
   }
+
 
   return (
     <Container>

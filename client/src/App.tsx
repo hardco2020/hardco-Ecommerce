@@ -11,8 +11,11 @@ import {
   Route
 } from "react-router-dom";
 import Success from './pages/success/Success';
+import { useAppSelector } from './redux/hook';
+import Admin from './pages/admin/Admin';
 
 function App() {
+  const user = useAppSelector((state) => state.auth.user)
   // console.log(process.env.REACT_APP_API_URL);
   // axios.defaults.baseURL=process.env.REACT_APP_API_URL
   // const token = Cookies.get('Authorization');
@@ -25,8 +28,11 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
+          <Route path="/admin">
+            <Admin/>
+          </Route>
           <Route path="/login">
-            <Login />
+            {user!==null ? <Home /> : <Login /> }
           </Route>
           <Route path="/register">
             <Register />

@@ -3,7 +3,7 @@ import { User } from '@interfaces/users.interface';
 
 export interface DataStoredInToken {
   _id: string;
-  // isAdmin: boolean;
+  isAdmin: boolean;
 }
 
 export interface TokenData {

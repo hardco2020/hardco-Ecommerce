@@ -1,12 +1,15 @@
-import { Add, Remove } from "@material-ui/icons";
-import React from "react";
+import { Add, Close, Remove } from "@material-ui/icons";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Announcement from "../../components/announcement/Announcement";
 import Footer from "../../components/footer/Footer";
 import Navbar from "../../components/navbar/Navbar";
 import Stripe from "../../components/stripe/Stripe";
-import { useAppSelector } from "../../redux/hook";
+import { usePutCartByIDMutation } from "../../redux/api";
+import { addProductQuantity, deleteProduct, subProductQuantity } from "../../redux/cartRedux";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { mobile } from "../../responsive";
+
 
 interface ButtonFilledProp {
   types?: string;
@@ -124,6 +127,14 @@ const ProductPrice = styled.div`
   font-weight: 200;
   ${mobile({marginBottom:"20px"})};
 `;
+
+const DeleteDetail = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
 const Hr = styled.hr`
   background-color: #eee;
   border: none;
@@ -153,7 +164,21 @@ const SummaryItemPrice = styled.span``
 
 
 const Cart = () => {
+  const user = useAppSelector(state=>state.auth);
   const cart = useAppSelector(state=>state.cart);
+  const [putCartAction] = usePutCartByIDMutation();
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    //只要動到dispatch就確認是否是登入 登入的話就使用rtk query 
+    if (user.user!==null){
+      const putCart = async() =>{
+        //console.log(cart)
+        const res = await putCartAction({id: user.user!._id!,cart:cart})
+        console.log(res)
+      }
+      putCart()
+    }
+  }, [dispatch,cart])
   return (
     <Container>
       <Navbar />
@@ -192,12 +217,15 @@ const Cart = () => {
               </ProductDetail>
               <PriceDetail>
                 <ProductAmountContainer>
-                  <Add />
+                  <Add style={{cursor:"pointer"}} onClick={()=> dispatch(addProductQuantity(product))} />
                   <ProductAmount>{product.quantity}</ProductAmount>
-                  <Remove />
+                  <Remove  style={{cursor:"pointer"}} onClick={()=> dispatch(subProductQuantity(product))}  />
                 </ProductAmountContainer>
                 <ProductPrice>$ {product.product.price*product.quantity}</ProductPrice>
               </PriceDetail>
+              <DeleteDetail>
+                <Close style={{cursor:"pointer"}} onClick={()=> dispatch(deleteProduct(product))}/>
+              </DeleteDetail>
             </Product>
             <Hr/> 
             </> 
@@ -232,3 +260,7 @@ const Cart = () => {
 };
 
 export default Cart;
+function putCartAction(arg0: { id: any; cart: import("../../redux/cartRedux").CartState; }) {
+  throw new Error("Function not implemented.");
+}
+

@@ -1,35 +1,24 @@
-import { createSlice,PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
+import { UserDataInterface } from "../type/type";
 
-
-interface UserState {
-    currentUser: string | null;
-    isFetching: boolean;
-    error: boolean;
-}
-
-const initialState:UserState = {
-    currentUser: null,
-    isFetching: false,
-    error: false,
-}
-const userSlice = createSlice({
-    name: "user",
-    initialState,
-    reducers:{
-        loginStart:(state)=> {
-            state.isFetching=true
-        },
-        loginSuccess:(state,action)=> {
-            state.isFetching = false
-            state.currentUser = action.payload
-        },
-        loginFaliure:(state)=> {
-            state.isFetching = false
-            state.error = true
-        },
+const slice = createSlice({
+  name: "auth",
+  initialState: { user: null, token: null } as {
+    user: null | UserDataInterface;
+    token: null | string;
+  },
+  reducers: {
+    setCredentials: (state,{ payload: { user, token } }: PayloadAction<{ user: UserDataInterface; token: string }>) => {
+      state.user = user;
+      state.token = token;
     }
-})
+  },
+  extraReducers: (builder) => {}
+});
 
-export const  { loginStart, loginSuccess, loginFaliure } = userSlice.actions
+export const { setCredentials } = slice.actions;
 
-export default userSlice.reducer;
+export default slice.reducer;
+
+export const selectCurrentUser = (state: RootState) => state.auth.user;

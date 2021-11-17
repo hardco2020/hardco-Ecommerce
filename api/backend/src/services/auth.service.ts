@@ -33,7 +33,7 @@ class AuthService {
     return createUserData;
   }
 
-  public async login(userData: LoginFormDto): Promise<{ cookie: string; findUser: User }> {
+  public async login(userData: LoginFormDto): Promise<{ cookie: string; findUser: Partial<User> }> {
     //確認有沒有data
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
     //尋找對應email的User 分以下幾種狀況
@@ -54,11 +54,12 @@ class AuthService {
       const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password);
       if (!isPasswordMatching) throw new HttpException(409, 'Your password not matching');
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { isAdmin, password, ...others } = findUser._doc;
     const tokenData = this.createToken(findUser);
     const cookie = this.createCookie(tokenData);
 
-    return { cookie, findUser };
+    return { cookie, findUser: others };
   }
   public async FacebookLogin(user: User): Promise<{ cookie: string }> {
     const tokenData = this.createToken(user);
@@ -75,7 +76,7 @@ class AuthService {
   }
 
   public createToken(user: User): TokenData {
-    const dataStoredInToken: DataStoredInToken = { _id: user._id };
+    const dataStoredInToken: DataStoredInToken = { _id: user._id, isAdmin: user.isAdmin };
     const secretKey: string = config.get('secretKey');
     const expiresIn: number = 60 * 60 * 60;
 
@@ -84,7 +85,7 @@ class AuthService {
   }
 
   public createCookie(tokenData: TokenData): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+    return tokenData.token;
   }
 }
 
