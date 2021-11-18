@@ -35,7 +35,16 @@ const FeaturedSub = styled.span`
     font-size: 15px;
     color:gray;
 `
-
+const ArrowDown = styled(ArrowDownward)`
+    font-size:16px;
+    margin-left:5px;
+    color:red;
+`
+const ArrowUp = styled(ArrowUpward)`
+    font-size:16px;
+    margin-left:5px;
+    color:green;
+`
 const FeaturedInfo = () => {
     return (
        <FeaturedContainer>
@@ -43,7 +52,7 @@ const FeaturedInfo = () => {
                <FeaturedTitle>Revanue</FeaturedTitle>
                <FeaturedMoneyContainer>
                    <FeaturedMoney>$2,415</FeaturedMoney>
-                   <FeaturedMoneyRate>-11.4</FeaturedMoneyRate><ArrowDownward style={{fontSize:"14px",marginLeft:"5px",color:"red"}}/>
+                   <FeaturedMoneyRate>-11.4</FeaturedMoneyRate><ArrowDown/>
                </FeaturedMoneyContainer>
                <FeaturedSub>Compared to last month</FeaturedSub>
            </FeaturedItem>
@@ -51,7 +60,7 @@ const FeaturedInfo = () => {
                <FeaturedTitle>Sales</FeaturedTitle>
                <FeaturedMoneyContainer>
                    <FeaturedMoney>$4,415</FeaturedMoney>
-                   <FeaturedMoneyRate>-1.4</FeaturedMoneyRate><ArrowDownward style={{fontSize:"14px",marginLeft:"5px",color:"red"}}/>
+                   <FeaturedMoneyRate>-1.4</FeaturedMoneyRate><ArrowDown/>
                </FeaturedMoneyContainer>
                <FeaturedSub>Compared to last month</FeaturedSub>
            </FeaturedItem>
@@ -59,7 +68,7 @@ const FeaturedInfo = () => {
                <FeaturedTitle>Cost</FeaturedTitle>
                <FeaturedMoneyContainer>
                    <FeaturedMoney>$2,225</FeaturedMoney>
-                   <FeaturedMoneyRate>+2.4</FeaturedMoneyRate><ArrowUpward style={{fontSize:"14px",marginLeft:"5px",color:"green"}}/>
+                   <FeaturedMoneyRate>+2.4</FeaturedMoneyRate><ArrowUp/>
                </FeaturedMoneyContainer>
                <FeaturedSub>Compared to last month</FeaturedSub>
            </FeaturedItem>
