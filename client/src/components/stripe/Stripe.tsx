@@ -4,6 +4,7 @@ import StripeCheckout from "react-stripe-checkout";
 import styled from "styled-components";
 import logo from "../../assets/Eden.png"
 import { publicRequest } from "../../axiosURL";
+import { useAppSelector } from "../../redux/hook";
 
 interface StripeProps{
   total:number;
@@ -27,7 +28,9 @@ const Button = styled.button`
   font-weight: 600;
 `;
 const KEY = process.env.REACT_APP_STRIPE_KEY!
-const Stripe = ({total,disabled} : StripeProps) => {
+const Stripe = ({total,disabled,} : StripeProps) => {
+    const cart = useAppSelector(state=>state.cart)
+    const userId:string = useAppSelector(state=>state.auth.user?._id!);
     const history = useHistory();
     const [stripeToken,setStripeToken] = useState<any | null>(null);
     const onToken = (token:object) =>{
@@ -37,15 +40,18 @@ const Stripe = ({total,disabled} : StripeProps) => {
 
         const makeRequest = async()=>{
             try{
+                console.log(stripeToken.card.address_line1);
                 if(stripeToken){
                 const res = await publicRequest.post(`/stripe/payment`,{
                     tokenId: stripeToken.id,
                     amount: {total},
+                    userId: userId,
+                    cart:cart,
                 })
                 console.log(res.data)
-                history.push('/success');
+                history.push('/');
             }
-            }catch(err){
+            }catch(err){ 
                 console.log(err);
             }
         }

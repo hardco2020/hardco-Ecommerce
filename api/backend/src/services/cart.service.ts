@@ -10,14 +10,15 @@ class CartService {
   public async createCart(CartData: CreateCartDto): Promise<Cart> {
     if (isEmpty(CartData)) throw new HttpException(400, 'CartData is empty');
     const createCartData: Cart = await this.cart.create({ ...CartData });
+    console.log('Create Order');
     return createCartData;
   }
-  public async updateCart(CartId: string, CartData: CreateCartDto): Promise<Cart> {
-    if (!CartId.match(/^[0-9a-fA-F]{24}$/)) {
-      throw new HttpException(409, 'CartId not valid');
+  public async updateCart(UserId: string, CartData: CreateCartDto): Promise<Cart> {
+    if (!UserId.match(/^[0-9a-fA-F]{24}$/)) {
+      throw new HttpException(409, 'UserId not valid');
     }
     if (isEmpty(CartData)) throw new HttpException(400, 'Update CartData is empty');
-    const updateCartById: Cart = await this.cart.findOneAndUpdate({ userId: CartId }, { ...CartData }, { upsert: true, new: true });
+    const updateCartById: Cart = await this.cart.findOneAndUpdate({ userId: UserId }, { ...CartData }, { upsert: true, new: true });
     console.log(updateCartById);
     if (!updateCartById) throw new HttpException(409, 'CartData not found');
     return updateCartById;

@@ -1,5 +1,5 @@
 import { CartProduct } from '@/interfaces/cart.interface';
-import { IsArray, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
@@ -9,9 +9,11 @@ export class CreateOrderDto {
   public products: CartProduct[];
 
   @IsNumber()
-  public amount: number;
+  public quantity: number;
 
-  @IsOptional()
+  @IsNumber()
+  public total: number;
+
   @IsString()
   public address: string;
 

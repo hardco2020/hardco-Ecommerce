@@ -9,8 +9,37 @@ const OrderSchema: Schema = new Schema(
     },
     products: [
       {
-        productId: {
-          type: String,
+        product: {
+          _id: {
+            type: String,
+          },
+          title: {
+            type: String,
+          },
+          desc: {
+            type: String,
+          },
+          img: {
+            type: String,
+          },
+          categories: {
+            type: Array,
+          },
+          price: {
+            type: Number,
+          },
+          createdAt: {
+            type: String,
+          },
+          updatedAt: {
+            type: String,
+          },
+          size: {
+            type: String,
+          },
+          color: {
+            type: String,
+          },
         },
         quantity: {
           type: Number,
@@ -18,12 +47,14 @@ const OrderSchema: Schema = new Schema(
         },
       },
     ],
-    amount: {
+    quantity: {
       type: Number,
-      require: true,
+    },
+    total: {
+      type: Number,
     },
     address: {
-      type: Object,
+      type: String,
       require: true,
     },
     status: {

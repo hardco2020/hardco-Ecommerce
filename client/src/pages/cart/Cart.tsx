@@ -157,7 +157,7 @@ const SummaryItem = styled.div<TotalItemProp>`
     display: flex;
     justify-content: space-between;
     font-weight: ${props=>props.types ==="total" && "500"};
-    font-size: ${props=>props.types ==="total" && "24px" }
+    font-size: ${props=>props.types ==="total" && "24px" };
 `
 const SummaryItemText = styled.span``
 const SummaryItemPrice = styled.span``
