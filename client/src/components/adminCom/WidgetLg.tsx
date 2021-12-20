@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { Avatar, Title } from "./Theme";
+import { Title } from "./Theme";
+import { useGetNewOrderQuery } from "../../redux/api";
+import { format} from 'timeago.js'
 
 interface ButtonProp {
-  status: "Approved" | "Declined" | "Pending";
+  status: string;
 }
 const Container = styled.div`
-  flex: 2;
+  flex: 3;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   padding: 20px;
@@ -19,7 +21,7 @@ const Table = styled.table`
 
 const Tr = styled.tr``;
 const Th = styled.th`
-  text-align: left;
+  /* text-align: left; */
 `;
 const User = styled.td`
   display: flex;
@@ -27,7 +29,7 @@ const User = styled.td`
   font-weight: 600;
 `;
 const Username = styled.span`
-  margin-left: 10px;
+  /* margin-left: 10px; */
 `;
 const Date = styled.td`
   font-weight: 300;
@@ -51,49 +53,38 @@ const Button = styled.button<ButtonProp>`
     (p.status === "Pending" && "#2a7ade")};
 `;
 const WidgetLg = () => {
+  const { data, isError, isLoading } = useGetNewOrderQuery();
   return (
     <Container>
       <Title>Latest transactions</Title>
       <Table>
+        <tbody>
         <Tr>
           <Th>Customer</Th>
           <Th>Date</Th>
           <Th>Amount</Th>
           <Th>Status</Th>
         </Tr>
-        <Tr>
+        {isError ? (
+          <>Oh no, there was an error</>
+        ) : isLoading ? (
+          <>Loading...</>
+        ) : data ? (
+          data.data.map((order) => (
+        <Tr key={order._id}>
           <User>
-            <Avatar src="https://images.pexels.com/photos/4172933/pexels-photo-4172933.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" />
-            <Username>Susan Carol</Username>
+            {/* <Avatar src="https://images.pexels.com/photos/4172933/pexels-photo-4172933.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" /> */}
+            <Username>{order.userId}</Username>
           </User>
-          <Date>2 Jun 2021</Date>
-          <Amount>$122.00</Amount>
+          <Date>{format(order.createdAt)}</Date>
+          <Amount>{order.total}</Amount>
           <Status>
-            <Button status="Approved">Approved</Button>
+            <Button status={order.status}>{order.status}</Button>
           </Status>
         </Tr>
-        <Tr>
-          <User>
-            <Avatar src="https://images.pexels.com/photos/4172933/pexels-photo-4172933.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" />
-            <Username>Susan Carol</Username>
-          </User>
-          <Date>2 Jun 2021</Date>
-          <Amount>$122.00</Amount>
-          <Status>
-            <Button status="Declined">Declined</Button>
-          </Status>
-        </Tr>
-        <Tr>
-          <User>
-            <Avatar src="https://images.pexels.com/photos/4172933/pexels-photo-4172933.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" />
-            <Username>Susan Carol</Username>
-          </User>
-          <Date>2 Jun 2021</Date>
-          <Amount>$122.00</Amount>
-          <Status>
-            <Button status="Pending">Pending</Button>
-          </Status>
-        </Tr>
+          ))
+        ) : null}
+        </tbody>
       </Table>
     </Container>
   );

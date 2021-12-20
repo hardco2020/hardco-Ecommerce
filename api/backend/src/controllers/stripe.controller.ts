@@ -14,7 +14,7 @@ class StripeController {
     try {
       //TODO:Implement CartData、UserID
       const { tokenId, amount, cart, userId } = req.body;
-      const { total } = amount;
+      // const { total } = amount;
       console.log(cart);
       console.log(userId);
       const user: string = userId;
@@ -25,7 +25,7 @@ class StripeController {
       });
       const charge = await stripe.charges.create({
         source: tokenId,
-        amount: total,
+        amount: amount,
         currency: 'usd',
       });
       //TODO:Use charge to create order

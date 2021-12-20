@@ -4,6 +4,7 @@ import { mobile } from "../../responsive";
 import axios from "axios";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { FacebookButton, GoogleButton } from "../../theme";
 // import { rest } from "msw";
 // import FacebookLogin from 'react-facebook-login';
 
@@ -33,13 +34,6 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
-`;
-const FacebookButton = styled.button`
-  border: none;
-  padding: 15px 20px;
-  cursor: pointer;
-  background-color: #4267b2;
-  color: white;
 `;
 const ThirdLogin = styled.div`
   margin: 10px 0px;
@@ -86,13 +80,13 @@ const Register = () => {
           <a href="http://localhost:3001/auth/facebook">
             <FacebookButton>Signup with Facebook</FacebookButton>
           </a>
-          {/* <FacebookLogin
-                    appId="415876120207477"
-                    autoLoad={true}
-                    fields="name,email,picture"
-                    //onClick={componentClicked}
-                    callback={responseFacebook} /> */}
         </ThirdLogin>
+        <ThirdLogin>
+          <a href="http://localhost:3001/auth/google">
+            <GoogleButton>Signup with Google</GoogleButton>
+          </a>
+        </ThirdLogin>
+  
         <Formik
           initialValues={{ email: "", password: "" ,username: "" , confirmPassword:""}}
           validationSchema={Yup.object({

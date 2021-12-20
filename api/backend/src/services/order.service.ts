@@ -30,11 +30,11 @@ class OrderService {
     if (!deleteOrderById) throw new HttpException(409, 'OrderData not found');
     return deleteOrderById;
   }
-  public async getOrder(OrderId: string): Promise<Order> {
+  public async getOrder(OrderId: string): Promise<Order[]> {
     if (!OrderId.match(/^[0-9a-fA-F]{24}$/)) {
       throw new HttpException(409, 'OrderId not valid');
     }
-    const OrderData: Order = await this.order.findOne({ userId: OrderId });
+    const OrderData: Order[] = await this.order.find({ userId: OrderId }).sort([['createdAt', -1]]);
     if (!OrderData) throw new HttpException(409, 'OrderData not found');
     return OrderData;
   }
@@ -43,16 +43,26 @@ class OrderService {
     if (!OrderData) throw new HttpException(409, 'OrderData not found');
     return OrderData;
   }
-  public async getIncome() {
+  public async getLatestOrder(): Promise<Order[]> {
+    const orders: Order[] = await this.order.find().sort({ _id: -1 }).limit(5);
+    if (!orders) throw new HttpException(409, 'OrderData not found');
+    return orders;
+  }
+  public async getIncome(productId?: string) {
     const date = new Date();
     const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
     const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+    //const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
     const income = await this.order.aggregate([
-      { $match: { createdAt: { $gte: previousMonth } } },
+      {
+        $match: {
+          createdAt: { $gte: previousMonth },
+        },
+      },
       {
         $project: {
           month: { $month: '$createdAt' },
-          sales: '$amount',
+          sales: '$total',
         },
       },
       {
@@ -60,6 +70,9 @@ class OrderService {
           _id: '$month',
           total: { $sum: '$sales' },
         },
+      },
+      {
+        $sort: { _id: -1 },
       },
     ]);
     return income;

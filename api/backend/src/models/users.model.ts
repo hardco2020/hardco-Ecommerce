@@ -20,6 +20,13 @@ const userSchema: Schema = new Schema(
     facebookId: {
       type: String,
     },
+    googleId: {
+      type: String,
+    },
+    img: {
+      type: String,
+      default: 'https://i.imgur.com/HeIi0wU.png',
+    },
   },
   { timestamps: true },
 );

@@ -10,8 +10,18 @@ import ProductsRoute from './routes/products.route';
 import CartRoute from '@/routes/cart.route';
 import OrderRoute from './routes/order.route';
 import StripeRoute from './routes/stripe.route';
+import EmailRoute from '@routes/email.route';
 validateEnv();
 
-const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(), new ProductsRoute(), new CartRoute(), new OrderRoute(), new StripeRoute()]);
+const app = new App([
+  new IndexRoute(),
+  new UsersRoute(),
+  new AuthRoute(),
+  new ProductsRoute(),
+  new CartRoute(),
+  new OrderRoute(),
+  new StripeRoute(),
+  new EmailRoute(),
+]);
 
 app.listen();

@@ -8,6 +8,7 @@ import Newsletter from "../../components/newsletter/Newsletter";
 import Products from "../../components/products/Products";
 import { mobile } from "../../responsive";
 import { Filters } from "../../type/type";
+import Chatbot from '../../components/chatbot/Chatbot'
 
 const Container = styled.div``;
 const Title = styled.h1`
@@ -88,6 +89,7 @@ const ProductList = () => {
       </FilterContainer>
       <Products cat={category} filters={filters} sort={sort}/>
       <Newsletter />
+      <Chatbot/>
       <Footer />
     </Container>
   );

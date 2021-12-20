@@ -1,6 +1,7 @@
 import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
+import { useGetIncomeQuery } from "../../redux/api";
 
 const FeaturedContainer = styled.div`
   width: 100%;
@@ -46,19 +47,39 @@ const ArrowUp = styled(ArrowUpward)`
   color: green;
 `;
 const FeaturedInfo = () => {
+  const { data, isError, isLoading } = useGetIncomeQuery();
+  console.log(data);
+  // console.log(income);
+  // console.log(percent);
   return (
     <FeaturedContainer>
       <FeaturedItem>
         <FeaturedTitle>Revanue</FeaturedTitle>
         <FeaturedMoneyContainer>
-          <FeaturedMoney>$2,415</FeaturedMoney>
-          <FeaturedMoneyRate>-11.4</FeaturedMoneyRate>
-          <ArrowDown />
+          <FeaturedMoney>
+            {isError
+              ? "Error"
+              : isLoading
+              ? "Loading..."
+              : data && `$` + data[0].total}
+          </FeaturedMoney>
+          <FeaturedMoneyRate>
+          {isError
+              ? "Error"
+              : isLoading
+              ? "Loading..."
+              : data &&  Math.floor(data[0].total*100/data[1].total-100)+"%"}
+          </FeaturedMoneyRate>
+          {isError
+              ? "Error"
+              : isLoading
+              ? "Loading..."
+              : data &&  Math.floor(data[0].total*100/data[1].total-100) < 0 ? <ArrowDown /> : <ArrowUp />} 
         </FeaturedMoneyContainer>
         <FeaturedSub>Compared to last month</FeaturedSub>
       </FeaturedItem>
       <FeaturedItem>
-        <FeaturedTitle>Sales</FeaturedTitle>
+        <FeaturedTitle>Upcoming!</FeaturedTitle>
         <FeaturedMoneyContainer>
           <FeaturedMoney>$4,415</FeaturedMoney>
           <FeaturedMoneyRate>-1.4</FeaturedMoneyRate>
@@ -67,7 +88,7 @@ const FeaturedInfo = () => {
         <FeaturedSub>Compared to last month</FeaturedSub>
       </FeaturedItem>
       <FeaturedItem>
-        <FeaturedTitle>Cost</FeaturedTitle>
+        <FeaturedTitle>Upcoming!</FeaturedTitle>
         <FeaturedMoneyContainer>
           <FeaturedMoney>$2,225</FeaturedMoney>
           <FeaturedMoneyRate>+2.4</FeaturedMoneyRate>

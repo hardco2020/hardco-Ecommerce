@@ -18,7 +18,6 @@ class UsersController {
       } else {
         findAllUsersData = await this.userService.findAllUser();
       }
-      console.log('123456');
       res.status(200).json({ data: findAllUsersData, message: 'findAll' });
     } catch (error) {
       next(error);

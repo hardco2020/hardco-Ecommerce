@@ -5,6 +5,8 @@ export interface User extends MongoResult {
   username: string;
   isAdmin: boolean;
   facebookId?: string;
+  googleId?: string;
+  img?: string;
 }
 export interface MongoResult {
   _doc?: any;
@@ -12,5 +14,5 @@ export interface MongoResult {
 
 export interface UserStats {
   _id: number;
-  totla: number;
+  total: number;
 }

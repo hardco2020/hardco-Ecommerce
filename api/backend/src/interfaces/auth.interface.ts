@@ -15,7 +15,7 @@ export interface RequestWithUser extends Request {
   user: User;
 }
 
-export interface FACEBOOK_APP_SECRET {
+export interface THIRD_PARTY_SECRET {
   id: number;
   secret: string;
 }

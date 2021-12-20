@@ -20,6 +20,10 @@ import CreateProduct from './pages/admin/CreateProduct';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminProduct from './pages/admin/AdminProduct';
 import jwt_decode from 'jwt-decode';
+import Order from './pages/order/Order';
+import ThirdLogin from './components/thirdLogin/ThirdLogin'
+import SendEmail from './pages/admin/SendEmail';
+
 
 function App() {
   const user = useAppSelector((state) => state.auth.user)
@@ -29,9 +33,14 @@ function App() {
   let isAdmin:boolean = false;
   if(token !== undefined && token!==null ){
     const admin:any = (jwt_decode(token))
+    console.log(admin);
+    if (Date.now() >= admin.exp * 1000) {
+      console.log("expired");
+      localStorage.removeItem('persist:root')
+      window.location.reload()
+    }
     isAdmin = admin.isAdmin
   }
-  console.log(isAdmin);
   return (
     <Router>
         <Switch>
@@ -59,11 +68,20 @@ function App() {
           <Route path="/admin/createproduct/">
             {isAdmin ? <CreateProduct/> :<Home/>}
           </Route>
+          <Route path="/admin/email/">
+            {isAdmin ? <SendEmail/> :<Home/>}
+          </Route>
           <Route path="/login">
             {user!==null ? <Home /> : <Login /> }
           </Route>
+          <Route path="/thirdlogin">
+            <ThirdLogin/>
+          </Route>
           <Route path="/register">
             <Register />
+          </Route >
+          <Route path="/order">
+            {user ? <Order/> : <Login/>}
           </Route >
           <Route path="/product/:id">
             <Product /> 

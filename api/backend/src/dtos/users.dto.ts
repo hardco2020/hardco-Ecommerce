@@ -13,4 +13,8 @@ export class CreateUserDto {
 
   @IsBoolean()
   public isAdmin: boolean;
+
+  @IsString()
+  @IsOptional()
+  public img: string | null;
 }

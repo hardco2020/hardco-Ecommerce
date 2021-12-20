@@ -9,6 +9,7 @@ import { usePutCartByIDMutation } from "../../redux/api";
 import { addProductQuantity, deleteProduct, subProductQuantity } from "../../redux/cartRedux";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { mobile } from "../../responsive";
+import Chatbot from '../../components/chatbot/Chatbot'
 
 
 interface ButtonFilledProp {
@@ -254,6 +255,7 @@ const Cart = () => {
           </Summary>
         </Bottom>
       </Wrapper>
+      <Chatbot/>
       <Footer />
     </Container>
   );

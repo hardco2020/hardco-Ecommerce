@@ -43,15 +43,27 @@ class OrderController {
   };
   public getAllOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const Order = await this.orderService.getAllOrder();
-      res.status(200).json({ data: Order, message: 'findUserOrder' });
+      let order: Order[];
+      const query = req.query.new;
+      if (query) {
+        order = await this.orderService.getLatestOrder();
+      } else {
+        order = await this.orderService.getAllOrder();
+      }
+      res.status(200).json({ data: order, message: 'findUserOrder' });
     } catch (error) {
       next(error);
     }
   };
   public getIncome = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const Income = await this.orderService.getIncome();
+      const pid: string = req.query.pid as string;
+      let Income;
+      if (pid) {
+        Income = await this.orderService.getIncome(pid);
+      } else {
+        Income = await this.orderService.getIncome();
+      }
       res.status(200).json({ data: Income, message: 'findIncome' });
     } catch (error) {
       next(error);

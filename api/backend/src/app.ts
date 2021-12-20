@@ -8,7 +8,7 @@ import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
-import { connect, NativeError, set } from 'mongoose';
+import { connect, set } from 'mongoose';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { dbConnection } from '@databases';
@@ -16,11 +16,8 @@ import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import passport from 'passport';
-import passportFacebook from 'passport-facebook';
 import session from 'express-session';
-import { FACEBOOK_APP_SECRET } from './interfaces/auth.interface';
-import userModel from './models/users.model';
-import { User } from '@interfaces/users.interface';
+import './passportApp';
 
 class App {
   public app: express.Application;
@@ -73,68 +70,9 @@ class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(session({ secret: 'secret' }));
+    // this.app.use(passportApp);
     this.app.use(passport.initialize());
     this.app.use(passport.session());
-    // this.app.all('/*', function (req, res, next) {
-    //   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    //   next();
-    // });
-    passport.serializeUser(function (user, done) {
-      done(null, user);
-    });
-    passport.deserializeUser(function (user: Express.User, done) {
-      done(null, user);
-    });
-    const { id, secret }: FACEBOOK_APP_SECRET = config.get('Facebook');
-    const FacebookStrategy = passportFacebook.Strategy;
-    passport.use(
-      new FacebookStrategy(
-        {
-          clientID: id,
-          clientSecret: secret,
-          callbackURL: 'http://localhost:3001/auth/facebook/callback',
-          profileFields: ['id', 'displayName', 'link', 'email'],
-        },
-        function (accessToken, refreshToken, profile, cb, done) {
-          // console.log('妳好', accessToken);
-          // console.log('妳好', refreshToken);
-          // console.log('你好', profile);
-          // console.log('你好', profile.email);
-          console.log('你好', cb);
-          userModel.findOne({ facebook: cb.id }, (err: NativeError, existingUser: User) => {
-            if (err) {
-              console.log('錯誤', err);
-              return done(err);
-            }
-            if (existingUser) {
-              console.log('存在', existingUser);
-              return done(undefined, existingUser);
-            } else {
-              userModel.findOne({ email: cb._json.email }, (err: NativeError, existingEmailUser: User) => {
-                console.log('不存在');
-                if (err) {
-                  console.log(err);
-                  return done(err);
-                }
-                if (existingEmailUser) {
-                  console.log('此email已經被註冊', existingUser);
-                  return done(undefined, existingEmailUser);
-                } else {
-                  const user = new userModel();
-                  user.email = cb._json.email;
-                  user.facebookId = cb.id;
-                  user.isAdmin = false;
-                  // userModel.create({ user });
-                  user.save((err: Error) => {
-                    done(err, user);
-                  });
-                }
-              });
-            }
-          });
-        },
-      ),
-    );
   }
 
   private initializeRoutes(routes: Routes[]) {

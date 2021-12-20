@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { Close, ExitToApp, Search, ShoppingCartOutlined } from "@material-ui/icons";
+import {
+  Close,
+  ExitToApp,
+  Search,
+  ShoppingCartOutlined,
+  ShopTwo,
+} from "@material-ui/icons";
 import { Badge, Popover } from "@material-ui/core";
 import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { deleteProduct } from "../../redux/cartRedux";
-
+import { PopoverCategory, ProductInterface } from "../../type/type";
+import NavbarCategory from "../navbarCategory/NavbarCategory";
+import { useSearchProductMutation } from "../../redux/api";
+import CircularProgress from "@mui/material/CircularProgress";
 interface ColorProps {
   color: string;
 }
@@ -45,11 +54,54 @@ const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   margin-left: 25px;
-  padding: 5px;
+  padding: 10px;
+  position: relative;
 `;
+const SearchResultContainer = styled.div`
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  padding: 15px;
+  background-color: white;
+  width: 260px;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
+  flex-direction: column;
+`;
+
+const SearchResultItemContainer = styled.div`
+  display: flex;
+  width: 260px;
+  margin-bottom: 10px;
+`;
+
+const SearchResultWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 260px;
+`;
+
+const SearchResultTitleContainer = styled.div`
+  display: flex;
+  flex: 9;
+  justify-content: flex-start;
+`;
+const SearchResultTitle = styled.span`
+  margin-right: 10px;
+`;
+const SearchResultIcon = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+`;
+
 const Input = styled.input`
   border: none;
   ${mobile({ width: "50px" })}
+  &:focus {
+    outline: none;
+  }
 `;
 const Center = styled.div`
   flex: 1;
@@ -152,37 +204,182 @@ const CartProductColor = styled.div<ColorProps>`
 `;
 const CartProductQuantity = styled.span``;
 
+const CategoryData: PopoverCategory[] = [
+  {
+    Title: "Top",
+    Category: [
+      {
+        name: "Suits",
+      },
+      {
+        name: "Sweaters",
+      },
+      {
+        name: "Hoodies",
+      },
+      {
+        name: "T-shirt",
+      },
+      {
+        name: "Polo Shirts",
+      },
+    ],
+  },
+  {
+    Title: "Summer",
+    Category: [
+      {
+        name: "Suits",
+      },
+      {
+        name: "Pants",
+      },
+      {
+        name: "T-shirt",
+      },
+      {
+        name: "Polo Shirts",
+      },
+      {
+        name: "Vests",
+      },
+    ],
+  },
+  {
+    Title: "Winter",
+    Category: [
+      {
+        name: "Sweaters",
+      },
+      {
+        name: "Hoodies",
+      },
+      {
+        name: "Vests",
+      },
+      {
+        name: "Coats",
+      },
+    ],
+  },
+];
+
 const Navbar = () => {
   const cart = useAppSelector((state) => state.cart);
   const user = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  const [anchorEl, setAnchorEl] = React.useState<
+
+  // for shopping cart popover
+  const [anchorEl, setAnchorEl] = useState<
     (EventTarget & HTMLDivElement) | null
   >(null);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = () => {
-    localStorage.removeItem('persist:root')
-    window.location.reload()
-  }
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  // for logout handling
+  const handleLogout = () => {
+    localStorage.removeItem("persist:root");
+    window.location.reload();
+  };
 
+  const handleSearchOpen = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    e.preventDefault();
+    setSearchOpen(true);
+  };
+  const handleSearchClose = (
+    e: React.FocusEvent<HTMLInputElement, Element>
+  ) => {
+    e.preventDefault();
+    setTimeout(() => {
+      setSearchOpen(false);
+    }, 500)
+  };
+  //for search popover
+  const [searchOpen, setSearchOpen] = useState<boolean>();
+
+  const [searchData, setSearchData] = useState<ProductInterface[]>([]);
+
+  const [searchAPI, { isLoading: searchLoading, isError: searchError }] =
+    useSearchProductMutation();
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (searchRef !== undefined && searchRef !== null) {
+      //should not be null
+      const productName: string = searchRef.current?.value!;
+      console.log(searchRef.current?.value);
+      if (productName.trim() !== "") {
+        const res = await searchAPI(productName).unwrap();
+        console.log(res);
+        setSearchData(res);
+      } else {
+        setSearchData([]);
+      }
+    }
+    // const {data} = useSearchProductQuery()
+  };
+  console.log(searchData);
   return (
     <Container>
       <Wrapper>
         <Left>
           <Language>EN</Language>
           <SearchContainer>
-            <Input placeholder="Search" />
-            <Search style={{ color: "gray", fontSize: 16 }} />
+            <Input
+              placeholder="Search"
+              onFocus={(e) => handleSearchOpen(e)}
+              onChange={(e) => handleSearch(e)}
+              onBlur= {(e)=>handleSearchClose(e)}
+              ref={searchRef}
+            />
+            {searchLoading ? (
+              <CircularProgress size="12px" />
+            ) : (
+              <Search style={{ color: "gray", fontSize: 16 }} />
+            )}
+
+            <SearchResultContainer
+              style={searchOpen ? { display: "flex" } : { display: "none" }}
+            >
+              <SearchResultItemContainer>
+                  <SearchResultWrapper>
+                    <SearchResultTitleContainer>
+                      <SearchResultTitle>See more on sale prodcuts!</SearchResultTitle>
+                    </SearchResultTitleContainer>
+                    <SearchResultIcon>
+                      <ShopTwo />
+                    </SearchResultIcon>
+                  </SearchResultWrapper>
+              </SearchResultItemContainer>
+              {searchData.map((data) => (
+                //TODO:
+                //-[x]Add isLoading and Error for the result
+                //-[x]Fix CSS error
+                //-[x]Add extra info when not search
+                <SearchResultItemContainer key={data._id}>
+                  <Link to={"/product/"+data._id} style={{ textDecoration: "none", color: "inherit" }}>
+                  <SearchResultWrapper>
+                    <SearchResultTitleContainer>
+                      <SearchResultTitle>{data.title}</SearchResultTitle>
+                    </SearchResultTitleContainer>
+                    <SearchResultIcon>
+                      <Search />
+                    </SearchResultIcon>
+                  </SearchResultWrapper>
+                  </Link>
+                </SearchResultItemContainer>
+              ))}
+            </SearchResultContainer>
           </SearchContainer>
+
+          <NavbarCategory CategoryData={CategoryData} CategoryName="Man" />
+          <NavbarCategory CategoryData={CategoryData} CategoryName="Woman" />
         </Left>
         <Center>
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
@@ -193,7 +390,16 @@ const Navbar = () => {
           {user.user !== null ? (
             <>
               <MenuItem>Hello {user.user?.username} </MenuItem>{" "}
-              <ExitToApp style={{cursor:"pointer",marginLeft:"10px"}} onClick={()=>handleLogout()}/>
+              <ExitToApp
+                style={{ cursor: "pointer", marginLeft: "10px" }}
+                onClick={() => handleLogout()}
+              />
+              <Link
+                to="/order"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <MenuItem>Order</MenuItem>
+              </Link>
             </>
           ) : (
             <>

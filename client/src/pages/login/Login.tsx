@@ -8,6 +8,8 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { useLoginMutation } from "../../redux/api";
 import { useAppDispatch } from "../../redux/hook";
 import { setCredentials } from "../../redux/authRedux"; 
+import { FacebookButton, GoogleButton, ThirdLogin } from "../../theme";
+import { CircularProgress } from "@material-ui/core";
 
 const Container = styled.div`
   width: 100vw;
@@ -43,6 +45,7 @@ const InputContainer = styled.div`
   align-items: center;
   display:flex;
   height:20px;
+  margin-bottom: 10px;
 `
 const Input = styled.input`
   flex: 1;
@@ -63,12 +66,6 @@ const Button = styled.button`
   color: white;
   margin-top: 10px;
 `;
-// const Link = styled.a`
-//   margin: 5px 0px;
-//   font-size: 12px;
-//   text-decoration: underline;
-//   cursor: pointer;
-// `;
 const Error = styled.span`
     margin: 5px 0px;
     color:red;
@@ -91,22 +88,21 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
   const [showPassword,setShowPassword] = useState<boolean>(false);
-  //const {data ,isLoading,isFetching }= useGetCartByIDQuery(user.user?._id!)
-  // useEffect(() => {
-  //   if(user!==null){
-  //     console.log(user)
-  //     const action = async()=>{
-  //       const res = await getCart(user.user?._id!)
-  //       console.log(res)
-  //     }
-  //     action()
-  //   }
-  // }, [dispatch])
   return (
     <Container>
       <Wrapper>
         {/* <button onClick={()=>testCookie()}>測試一下cookie</button> */}
         <Title>SIGN IN</Title>
+        <ThirdLogin>
+          <a href="http://localhost:3001/auth/facebook">
+            <FacebookButton>Signin with Facebook</FacebookButton>
+          </a>
+        </ThirdLogin>
+        <ThirdLogin>
+          <a href="http://localhost:3001/auth/google">
+            <GoogleButton>Signin with Google</GoogleButton>
+          </a>
+        </ThirdLogin>
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={Yup.object({
@@ -130,6 +126,7 @@ const Login = () => {
                     }
                   }
                 }catch(err){
+                  actions.setErrors({password:"Their maybe something wrong with Internet , please try again!"})
                   console.log(err)
                 } 
           }}>
@@ -139,7 +136,8 @@ const Login = () => {
             handleChange,
             handleBlur,
             handleSubmit,
-            validateField
+            validateField,
+            isSubmitting,
           }) => (
             <Form onSubmit={handleSubmit}>
                 <InputContainer>
@@ -171,7 +169,7 @@ const Login = () => {
                 
               <Button 
               data-testid="submit"
-              type="submit">Submit</Button>
+              type="submit">{isSubmitting ? <CircularProgress size="15px"/> : "Submit"}</Button>
             </Form>
           )}
         </Formik>

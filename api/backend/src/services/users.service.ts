@@ -9,7 +9,7 @@ class UserService {
   public users = userModel;
 
   public async findLatestUser(): Promise<User[]> {
-    const users: User[] = await this.users.find().sort({ _id: -1 }).limit(1);
+    const users: User[] = await this.users.find().sort({ _id: -1 }).limit(5);
     return users;
   }
   public async findAllUser(): Promise<User[]> {
@@ -18,6 +18,8 @@ class UserService {
   }
   public async findAllUserStats(): Promise<UserStats[]> {
     const date = new Date();
+    // const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
+    // const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
     const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
     const userStats: UserStats[] = await this.users.aggregate([
       { $match: { createdAt: { $gte: lastYear } } },
@@ -45,6 +47,7 @@ class UserService {
     try {
       const findUser = await this.users.findOne({ _id: userId });
       if (!findUser) throw new HttpException(409, 'UserId does not exist!');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...other } = findUser._doc;
       return other;
     } catch (err) {

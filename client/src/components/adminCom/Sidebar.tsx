@@ -71,10 +71,12 @@ const Sidebar = () => {
         <SidebarMenu>
           <SidebarTitle>Dashboard</SidebarTitle>
           <SidebarList>
+            <ToLink to="/admin"> 
             <SidebarListItem active={true}>
               <LineStyle style={{ marginRight: "5px", fontSize: "20px" }} />
               Home
             </SidebarListItem>
+            </ToLink>
             <SidebarListItem>
               <Timeline style={{ marginRight: "5px", fontSize: "20px" }} />
               Analytics
@@ -113,10 +115,12 @@ const Sidebar = () => {
         <SidebarMenu>
           <SidebarTitle>Notifications</SidebarTitle>
           <SidebarList>
+            <ToLink to="/admin/email">
             <SidebarListItem active={true}>
               <MailOutline style={{ marginRight: "5px", fontSize: "20px" }} />
               Mail
             </SidebarListItem>
+            </ToLink>
             <SidebarListItem>
               <DynamicFeed style={{ marginRight: "5px", fontSize: "20px" }} />
               Feedback

@@ -27,18 +27,39 @@ class AuthRoute implements Routes {
     this.router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
     this.router.get(
       '/auth/facebook/callback',
-      passport.authenticate('facebook', { failureRedirect: 'http://localhost:3000/register' }),
+      // passport.authenticate('facebook', { failureRedirect: 'http://localhost:3000/register' }),
+      passport.authenticate('facebook', { failureRedirect: '/auth/fail' }),
       async function (req, res) {
         const authService = new AuthService();
         const userData: User = req.user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const tokenData: TokenData = await authService.createToken(userData);
-        console.log(tokenData);
         // res.setHeader('Set-Cookie', [cookie]);
-        res.cookie('Authorization', tokenData.token, { maxAge: tokenData.expiresIn });
-        res.redirect('http://localhost:3000/');
+        // res.send(tokenData);
+        // res.cookie('Authorization', tokenData.token, { maxAge: tokenData.expiresIn });
+        res.redirect('http://localhost:3000/thirdlogin');
         // res.redirect('http://localhost:3000/');
       },
     );
+    this.router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
+    this.router.get(
+      '/auth/google/callback',
+      // passport.authenticate('google', { failureRedirect: 'http://localhost:3000/register' }),
+      passport.authenticate('google', { failureRedirect: '/auth/fail' }),
+      async function (req, res) {
+        const authService = new AuthService();
+        const userData: User = req.user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const tokenData: TokenData = await authService.createToken(userData);
+        // res.setHeader('Set-Cookie', [cookie]);
+        // res.send(tokenData);
+        // res.cookie('Authorization', tokenData.token, { maxAge: tokenData.expiresIn });
+        res.redirect('http://localhost:3000/thirdlogin');
+        // res.redirect('http://localhost:3000/');
+      },
+    );
+    this.router.get('/auth/success', this.authController.thirdLoginSuccess);
+    this.router.get('/auth/fail', this.authController.thirdLoginFail);
   }
 }
 

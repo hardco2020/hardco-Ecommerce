@@ -12,6 +12,7 @@ import { usePutCartByIDMutation } from "../../redux/api"
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { mobile } from "../../responsive";
 import { ProductInterface, ProductResponse } from "../../type/type";
+import Chatbot from '../../components/chatbot/Chatbot'
 interface FilterColorProps {
   color: string;
 }
@@ -255,6 +256,7 @@ const Product = () => {
         </Wrapper>
       )}
       <Newsletter />
+      <Chatbot/>
       <Footer />
     </Container>
   );

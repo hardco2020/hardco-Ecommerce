@@ -4,15 +4,17 @@ import { LoginFormDto } from '@dtos/login.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
+import EmailService from '@/services/email.service';
 
 class AuthController {
   public authService = new AuthService();
-
+  public emailService = new EmailService();
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: CreateUserDto = req.body;
       const signUpUserData: User = await this.authService.signup(userData);
-
+      await this.emailService.sendWelcome(userData.username, userData.email);
+      //TODO: Send Email to register mail
       res.status(201).json({ data: signUpUserData, message: 'signup' });
     } catch (error) {
       next(error);
@@ -41,6 +43,27 @@ class AuthController {
     } catch (error) {
       next(error);
     }
+  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public thirdLoginSuccess = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    if (req.user) {
+      //create token
+      const token = await this.authService.createToken(req.user);
+      res.status(200).json({
+        success: true,
+        message: 'successfull',
+        user: req.user,
+        token: token,
+        //   cookies: req.cookies
+      });
+    }
+  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public thirdLoginFail = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    res.status(401).json({
+      success: false,
+      message: 'failure',
+    });
   };
 }
 
