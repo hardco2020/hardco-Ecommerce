@@ -81,10 +81,12 @@ const NavbarCategory = ({CategoryName,CategoryData}:NavbarCategoryProp) => {
             aria-haspopup="true"
             onMouseEnter={popoverEnter}
             onMouseLeave={popoverLeave}
+            data-test={CategoryName} 
           >
             {CategoryName}
         </MenuItem>
           <Popover
+            data-test={CategoryName+"content"}
             id="mouse-over-popover"
             className={classes.popover}
             classes={{
@@ -105,7 +107,7 @@ const NavbarCategory = ({CategoryName,CategoryData}:NavbarCategoryProp) => {
               onMouseLeave: popoverLeave,
             }}
           >
-            <CategoryContainer>
+            <CategoryContainer data-test={CategoryName+"content"}>
               {CategoryData.map((c)=>(
                 <>
                 <CategoryWrapper key={c.Title}>

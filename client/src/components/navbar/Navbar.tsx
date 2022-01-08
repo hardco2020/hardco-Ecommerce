@@ -57,7 +57,11 @@ const SearchContainer = styled.div`
   padding: 10px;
   position: relative;
 `;
-const SearchResultContainer = styled.div`
+type displayProp = {
+  show:boolean
+}
+const SearchResultContainer = styled.div<displayProp>`
+  display:${(props)=>props.show===true ? "flex" : "none"};
   position: absolute;
   top: 40px;
   left: 0px;
@@ -298,7 +302,7 @@ const Navbar = () => {
     e.preventDefault();
     setTimeout(() => {
       setSearchOpen(false);
-    }, 500)
+    }, 500);
   };
   //for search popover
   const [searchOpen, setSearchOpen] = useState<boolean>();
@@ -332,10 +336,11 @@ const Navbar = () => {
           <Language>EN</Language>
           <SearchContainer>
             <Input
+              data-test="searchContainer"
               placeholder="Search"
               onFocus={(e) => handleSearchOpen(e)}
               onChange={(e) => handleSearch(e)}
-              onBlur= {(e)=>handleSearchClose(e)}
+              onBlur={(e) => handleSearchClose(e)}
               ref={searchRef}
             />
             {searchLoading ? (
@@ -345,17 +350,21 @@ const Navbar = () => {
             )}
 
             <SearchResultContainer
-              style={searchOpen ? { display: "flex" } : { display: "none" }}
+              data-test="searchBar"
+              show = {searchOpen ? true : false}
+              // style={searchOpen ? { display: "flex" } : { display: "none" }}
             >
               <SearchResultItemContainer>
-                  <SearchResultWrapper>
-                    <SearchResultTitleContainer>
-                      <SearchResultTitle>See more on sale prodcuts!</SearchResultTitle>
-                    </SearchResultTitleContainer>
-                    <SearchResultIcon>
-                      <ShopTwo />
-                    </SearchResultIcon>
-                  </SearchResultWrapper>
+                <SearchResultWrapper>
+                  <SearchResultTitleContainer>
+                    <SearchResultTitle>
+                      See more on sale prodcuts!
+                    </SearchResultTitle>
+                  </SearchResultTitleContainer>
+                  <SearchResultIcon>
+                    <ShopTwo />
+                  </SearchResultIcon>
+                </SearchResultWrapper>
               </SearchResultItemContainer>
               {searchData.map((data) => (
                 //TODO:
@@ -363,15 +372,18 @@ const Navbar = () => {
                 //-[x]Fix CSS error
                 //-[x]Add extra info when not search
                 <SearchResultItemContainer key={data._id}>
-                  <Link to={"/product/"+data._id} style={{ textDecoration: "none", color: "inherit" }}>
-                  <SearchResultWrapper>
-                    <SearchResultTitleContainer>
-                      <SearchResultTitle>{data.title}</SearchResultTitle>
-                    </SearchResultTitleContainer>
-                    <SearchResultIcon>
-                      <Search />
-                    </SearchResultIcon>
-                  </SearchResultWrapper>
+                  <Link
+                    to={"/product/" + data._id}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <SearchResultWrapper>
+                      <SearchResultTitleContainer>
+                        <SearchResultTitle>{data.title}</SearchResultTitle>
+                      </SearchResultTitleContainer>
+                      <SearchResultIcon>
+                        <Search />
+                      </SearchResultIcon>
+                    </SearchResultWrapper>
                   </Link>
                 </SearchResultItemContainer>
               ))}
@@ -419,7 +431,11 @@ const Navbar = () => {
           )}
 
           {/* <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}> */}
-          <MenuItem aria-describedby={id} onClick={(e) => handleClick(e)}>
+          <MenuItem
+            aria-describedby={id}
+            onClick={(e) => handleClick(e)}
+            data-test="shoppingCart"
+          >
             <Badge badgeContent={cart.quantity} color="primary">
               <ShoppingCartOutlined />
             </Badge>
@@ -435,7 +451,7 @@ const Navbar = () => {
               horizontal: "right",
             }}
           >
-            <CartContainer>
+            <CartContainer data-test="shoppingCartPopover">
               <CartWrapper>
                 <CartTitleContainer>
                   <CartTitleLeft>
