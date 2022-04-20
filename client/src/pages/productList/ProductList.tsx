@@ -8,7 +8,7 @@ import Newsletter from "../../components/newsletter/Newsletter";
 import Products from "../../components/products/Products";
 import { mobile } from "../../responsive";
 import { Filters } from "../../type/type";
-import Chatbot from '../../components/chatbot/Chatbot'
+import Chatbot from "../../components/chatbot/Chatbot";
 
 const Container = styled.div``;
 const Title = styled.h1`
@@ -37,7 +37,20 @@ const Select = styled.select`
 `;
 const Option = styled.option``;
 
-
+const ProductsWrapper = styled.div`
+  display: flex;
+  width: 100vw;
+`;
+const ProductSidebar = styled.div`
+  display: flex;
+  flex: 1;
+`;
+const ProductContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 5;
+  padding: 20px;
+`;
 const ProductList = () => {
   const location = useLocation();
   const category = location.pathname.split("/")[2];
@@ -56,40 +69,46 @@ const ProductList = () => {
     <Container>
       <Announcement />
       <Navbar />
-      <Title>{category}</Title>
-      <FilterContainer>
-        <Filter>
-          <FilterText>Filter Products:</FilterText>
-          <Select name="color" onChange={(e) => handleFilters(e)}>
-            <Option disabled>Color</Option>
-            <Option>White</Option>
-            <Option>Black</Option>
-            <Option>Red</Option>
-            <Option>Blue</Option>
-            <Option>Yellow</Option>
-            <Option>Green</Option>
-          </Select>
-          <Select name="size" onChange={(e) => handleFilters(e)}>
-            <Option disabled>Size</Option>
-            <Option>XS</Option>
-            <Option>S</Option>
-            <Option>M</Option>
-            <Option>L</Option>
-            <Option>XL</Option>
-          </Select>
-        </Filter>
-        <Filter>
-          <FilterText>Sort Products:</FilterText>
-          <Select name="sort" onChange={(e) => setSort(e.target.value)}>
-            <Option value="newest" >Newtest</Option>
-            <Option value="asc">Price(asc)</Option>
-            <Option value="desc">Price(desc)</Option>
-          </Select>
-        </Filter>
-      </FilterContainer>
-      <Products cat={category} filters={filters} sort={sort}/>
+
+      <ProductsWrapper>
+        <ProductSidebar>testdfdfdf</ProductSidebar>
+        <ProductContainer>
+          <Title>{category}</Title>
+          <FilterContainer>
+            <Filter>
+              <FilterText>Filter Products:</FilterText>
+              <Select name="color" onChange={(e) => handleFilters(e)}>
+                <Option disabled>Color</Option>
+                <Option>White</Option>
+                <Option>Black</Option>
+                <Option>Red</Option>
+                <Option>Blue</Option>
+                <Option>Yellow</Option>
+                <Option>Green</Option>
+              </Select>
+              <Select name="size" onChange={(e) => handleFilters(e)}>
+                <Option disabled>Size</Option>
+                <Option>XS</Option>
+                <Option>S</Option>
+                <Option>M</Option>
+                <Option>L</Option>
+                <Option>XL</Option>
+              </Select>
+            </Filter>
+            <Filter>
+              <FilterText>Sort Products:</FilterText>
+              <Select name="sort" onChange={(e) => setSort(e.target.value)}>
+                <Option value="newest">Newtest</Option>
+                <Option value="asc">Price(asc)</Option>
+                <Option value="desc">Price(desc)</Option>
+              </Select>
+            </Filter>
+          </FilterContainer>
+          <Products cat={category} filters={filters} sort={sort} />
+        </ProductContainer>
+      </ProductsWrapper>
       <Newsletter />
-      <Chatbot/>
+      <Chatbot />
       <Footer />
     </Container>
   );
