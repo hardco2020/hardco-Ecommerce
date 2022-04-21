@@ -9,6 +9,7 @@ import Products from "../../components/products/Products";
 import { mobile } from "../../responsive";
 import { Filters } from "../../type/type";
 import Chatbot from "../../components/chatbot/Chatbot";
+import Sidebar from "../../components/sidebar/Sidebar";
 
 const Container = styled.div``;
 const Title = styled.h1`
@@ -71,7 +72,9 @@ const ProductList = () => {
       <Navbar />
 
       <ProductsWrapper>
-        <ProductSidebar>testdfdfdf</ProductSidebar>
+        <ProductSidebar>
+          <Sidebar />
+        </ProductSidebar>
         <ProductContainer>
           <Title>{category}</Title>
           <FilterContainer>

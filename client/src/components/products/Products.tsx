@@ -13,7 +13,7 @@ import Error from "../error/Error";
 interface PageButtonProp {
   selected: boolean;
 }
-const Container = styled.div`
+const Container = styled.div` 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
