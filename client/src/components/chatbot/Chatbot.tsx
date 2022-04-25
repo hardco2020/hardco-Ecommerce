@@ -4,10 +4,10 @@ import {
   addResponseMessage,
   setQuickButtons,
   addUserMessage,
-  renderCustomComponent
+  renderCustomComponent,
 } from "react-chat-widget";
 import "react-chat-widget/lib/styles.css";
-import test from "./components/test";
+import test from "./components/testss";
 
 //TODO: Implement answer logic
 //FIXME: Fix every page render problem
@@ -58,7 +58,7 @@ const Chatbot = () => {
     // Now send the message throught the backend API
   };
   let gender: string;
-  let picChoose:number;
+  let picChoose: number;
   const handleQuickButtonClicked = (message: any) => {
     var dressList = [
       {
@@ -79,15 +79,15 @@ const Chatbot = () => {
       },
     ];
     var picList = [
-        {
-            label:"1",
-            value:"1",
-        },
-        {
-            label:"2",
-            value:"2",
-        },
-    ]
+      {
+        label: "1",
+        value: "1",
+      },
+      {
+        label: "2",
+        value: "2",
+      },
+    ];
     switch (message) {
       case "men":
         addUserMessage("Mr!");
@@ -105,17 +105,23 @@ const Chatbot = () => {
         break;
       case "20":
         if (gender === "men") {
-          addResponseMessage("Time to learn your taste with a few 'either' or questions..."); 
+          addResponseMessage(
+            "Time to learn your taste with a few 'either' or questions..."
+          );
           addResponseMessage("Which do you prefer, 1 or 2 ?");
-          //TODO: 
+          //TODO:
           // How to return button click when click on an image
-          // render two pic at once 
-          renderCustomComponent(test,{src1:"https://i.imgur.com/AQ6mKy7.png",src2:"https://i.imgur.com/AQ6mKy7.png"})
+          // render two pic at once
+          renderCustomComponent(test, {
+            src1: "https://i.imgur.com/AQ6mKy7.png",
+            src2: "https://i.imgur.com/AQ6mKy7.png",
+          });
           setQuickButtons(picList);
         } else if (gender === "women") {
-            addResponseMessage("Time to learn your taste with a few 'either' or questions..."); 
-          addResponseMessage("Which do you prefer, 1 or 2 ?"); 
-
+          addResponseMessage(
+            "Time to learn your taste with a few 'either' or questions..."
+          );
+          addResponseMessage("Which do you prefer, 1 or 2 ?");
         }
         break;
       case "college":
@@ -140,11 +146,11 @@ const Chatbot = () => {
         }
         break;
       case "1":
-        picChoose = 1
+        picChoose = 1;
         console.log("123");
         break;
       case "2":
-        picChoose = 2
+        picChoose = 2;
         console.log("1234");
         break;
       default:

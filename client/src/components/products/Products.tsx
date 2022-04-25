@@ -13,12 +13,12 @@ import Error from "../error/Error";
 interface PageButtonProp {
   selected: boolean;
 }
-const Container = styled.div`
-  padding: 20px;
+const Container = styled.div` 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 `;
+
 const PageContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -109,10 +109,12 @@ const Products = ({ cat, filters, sort }: ProductsInterface) => {
             <ProductItem item={item} key={item._id} />
           ))
         ) : (
-          products &&
-          products.map((item: ProductInterface) => (
-            <ProductItem item={item} key={item._id} />
-          ))
+          <>
+            {products &&
+              products.map((item: ProductInterface) => (
+                <ProductItem item={item} key={item._id} />
+              ))}
+          </>
         )}
       </Container>
       <PageContainer>
