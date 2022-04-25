@@ -12,6 +12,7 @@ import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { deleteProduct } from "../../redux/cartRedux";
+import { setCredentials } from "../../redux/authRedux";
 import { PopoverCategory, ProductInterface } from "../../type/type";
 import NavbarCategory from "../navbarCategory/NavbarCategory";
 import { useSearchProductMutation } from "../../redux/api";
@@ -275,7 +276,11 @@ const Navbar = () => {
   >(null);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setAnchorEl(event.currentTarget);
+    if (anchorEl === null) {
+      setAnchorEl(event.currentTarget);
+    } else {
+      handleClose();
+    }
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -284,6 +289,7 @@ const Navbar = () => {
   const id = open ? "simple-popover" : undefined;
   // for logout handling
   const handleLogout = () => {
+    dispatch(setCredentials({ user: null, token: null }));
     localStorage.removeItem("persist:root");
     window.location.reload();
   };
@@ -298,7 +304,7 @@ const Navbar = () => {
     e.preventDefault();
     setTimeout(() => {
       setSearchOpen(false);
-    }, 500)
+    }, 500);
   };
   //for search popover
   const [searchOpen, setSearchOpen] = useState<boolean>();
@@ -313,7 +319,6 @@ const Navbar = () => {
     if (searchRef !== undefined && searchRef !== null) {
       //should not be null
       const productName: string = searchRef.current?.value!;
-      console.log(searchRef.current?.value);
       if (productName.trim() !== "") {
         const res = await searchAPI(productName).unwrap();
         console.log(res);
@@ -324,7 +329,7 @@ const Navbar = () => {
     }
     // const {data} = useSearchProductQuery()
   };
-  console.log(searchData);
+  // console.log(searchData);
   return (
     <Container>
       <Wrapper>
@@ -332,10 +337,11 @@ const Navbar = () => {
           <Language>EN</Language>
           <SearchContainer>
             <Input
+              data-testid="searchInput"
               placeholder="Search"
               onFocus={(e) => handleSearchOpen(e)}
               onChange={(e) => handleSearch(e)}
-              onBlur= {(e)=>handleSearchClose(e)}
+              onBlur={(e) => handleSearchClose(e)}
               ref={searchRef}
             />
             {searchLoading ? (
@@ -346,32 +352,41 @@ const Navbar = () => {
 
             <SearchResultContainer
               style={searchOpen ? { display: "flex" } : { display: "none" }}
+              data-testid="searchResultContainer"
             >
               <SearchResultItemContainer>
-                  <SearchResultWrapper>
-                    <SearchResultTitleContainer>
-                      <SearchResultTitle>See more on sale prodcuts!</SearchResultTitle>
-                    </SearchResultTitleContainer>
-                    <SearchResultIcon>
-                      <ShopTwo />
-                    </SearchResultIcon>
-                  </SearchResultWrapper>
+                <SearchResultWrapper>
+                  <SearchResultTitleContainer>
+                    <SearchResultTitle>
+                      See more on sale prodcuts!
+                    </SearchResultTitle>
+                  </SearchResultTitleContainer>
+                  <SearchResultIcon>
+                    <ShopTwo />
+                  </SearchResultIcon>
+                </SearchResultWrapper>
               </SearchResultItemContainer>
               {searchData.map((data) => (
                 //TODO:
                 //-[x]Add isLoading and Error for the result
                 //-[x]Fix CSS error
                 //-[x]Add extra info when not search
-                <SearchResultItemContainer key={data._id}>
-                  <Link to={"/product/"+data._id} style={{ textDecoration: "none", color: "inherit" }}>
-                  <SearchResultWrapper>
-                    <SearchResultTitleContainer>
-                      <SearchResultTitle>{data.title}</SearchResultTitle>
-                    </SearchResultTitleContainer>
-                    <SearchResultIcon>
-                      <Search />
-                    </SearchResultIcon>
-                  </SearchResultWrapper>
+                <SearchResultItemContainer
+                  key={data._id}
+                  role="searchResultItems"
+                >
+                  <Link
+                    to={"/product/" + data._id}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <SearchResultWrapper>
+                      <SearchResultTitleContainer>
+                        <SearchResultTitle>{data.title}</SearchResultTitle>
+                      </SearchResultTitleContainer>
+                      <SearchResultIcon>
+                        <Search />
+                      </SearchResultIcon>
+                    </SearchResultWrapper>
                   </Link>
                 </SearchResultItemContainer>
               ))}
@@ -389,8 +404,10 @@ const Navbar = () => {
         <Right>
           {user.user !== null ? (
             <>
-              <MenuItem>Hello {user.user?.username} </MenuItem>{" "}
+              <MenuItem role="userTitle">Hello {user.user?.username} </MenuItem>{" "}
               <ExitToApp
+                data-testid="logout"
+                role="userLogout"
                 style={{ cursor: "pointer", marginLeft: "10px" }}
                 onClick={() => handleLogout()}
               />
@@ -419,7 +436,11 @@ const Navbar = () => {
           )}
 
           {/* <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}> */}
-          <MenuItem aria-describedby={id} onClick={(e) => handleClick(e)}>
+          <MenuItem
+            aria-describedby={id}
+            onClick={(e) => handleClick(e)}
+            data-testid="cart"
+          >
             <Badge badgeContent={cart.quantity} color="primary">
               <ShoppingCartOutlined />
             </Badge>
@@ -427,6 +448,7 @@ const Navbar = () => {
           {/* </Link> */}
           <Popover
             id={id}
+            role="popoverCart"
             open={open}
             anchorEl={anchorEl}
             onClose={handleClose}
@@ -451,7 +473,7 @@ const Navbar = () => {
                   </CartTitleRight>
                 </CartTitleContainer>
                 <CartLine />
-                <CartProductContainer>
+                <CartProductContainer role="CartProductContainer">
                   {cart &&
                     cart.products.map((c) => (
                       <CartSingleProductContainer
@@ -477,6 +499,7 @@ const Navbar = () => {
                           </CartProductQuantity>
                         </CartProductQuantityContainer>
                         <Close
+                          data-testid={`delete${c.product.title}`}
                           style={{ cursor: "pointer" }}
                           onClick={() => dispatch(deleteProduct(c))}
                         />

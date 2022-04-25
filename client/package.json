@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-flow": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
     "@craco/craco": "^6.4.3",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
@@ -14,29 +16,30 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
+    "@types/jest": "^27.4.1",
     "@types/js-cookie": "^3.0.0",
     "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
+    "@types/react": "^16.0.11",
     "@types/react-cookies": "^0.1.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react-dom": "^17.0.9",
     "@types/react-facebook-login": "^4.1.4",
     "@types/react-router-dom": "^5.3.1",
     "@types/styled-components": "^5.1.14",
     "axios": "^0.23.0",
     "chat-template": "^0.0.26",
     "components": "^0.1.0",
+    "cypress": "^9.5.4",
     "firebase": "^9.6.0",
     "formik": "^2.2.9",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
-    "msw": "^0.35.0",
-    "react": "^17.0.2",
+    "msw": "^0.39.2",
+    "react": "^16.13.0",
     "react--customizable-chat-bot": "^1.0.6",
     "react-chat-widget": "^3.1.4",
     "react-chatbot-kit": "^2.0.1",
     "react-cookie": "^4.1.1",
-    "react-dom": "^17.0.2",
+    "react-dom": "^16.13.0",
     "react-facebook-login": "^4.1.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
@@ -46,9 +49,13 @@
     "redux-persist": "^6.0.0",
     "styled-components": "^5.3.1",
     "timeago.js": "^4.0.2",
-    "typescript": "^4.1.2",
+    "typescript": "^4.6.3",
     "web-vitals": "^1.0.1",
     "yup": "^0.32.11"
+  },
+  "resolutions": {
+    "@types/react": "17.0.14",
+    "@types/react-dom": "17.0.14"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -57,7 +64,9 @@
     "craco_start": "craco start",
     "craco_build": "craco build",
     "craco_test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "jestTest": "jest --coverage",
+    "cypressTest": "start-test 3000 cy:open"
   },
   "eslintConfig": {
     "extends": [
@@ -78,8 +87,21 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.16.7",
+    "@babel/runtime": "^7.17.9",
+    "@cypress/browserify-preprocessor": "^3.0.2",
+    "@cypress/code-coverage": "^3.9.12",
+    "@types/enzyme": "^3.10.12",
+    "@types/redux-mock-store": "^1.0.3",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
     "autoprefixer": "^9",
+    "babel-plugin-istanbul": "^6.1.1",
+    "enzyme": "^3.11.0",
+    "jest": "^27.5.1",
     "postcss": "^7",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+    "redux-mock-store": "^1.5.4",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "ts-jest": "^27.1.4",
+    "whatwg-fetch": "^3.6.2"
   }
 }

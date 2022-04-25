@@ -9,12 +9,17 @@ const slice = createSlice({
     token: null | string;
   },
   reducers: {
-    setCredentials: (state,{ payload: { user, token } }: PayloadAction<{ user: UserDataInterface; token: string }>) => {
+    setCredentials: (
+      state,
+      {
+        payload: { user, token },
+      }: PayloadAction<{ user: UserDataInterface | null; token: string | null }>
+    ) => {
       state.user = user;
       state.token = token;
-    }
+    },
   },
-  extraReducers: (builder) => {}
+  extraReducers: (builder) => {},
 });
 
 export const { setCredentials } = slice.actions;
