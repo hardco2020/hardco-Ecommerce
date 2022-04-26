@@ -105,7 +105,7 @@ describe("Label", () => {
     expect(labelWoman).toHaveTextContent("Woman");
   });
 
-  test("Click on label should show category popove", async () => {
+  test("Click on label should show category popover", async () => {
     fireEvent.mouseOver(labelMan);
     //await waitFor(() => screen.getByTestId("popoverMan"));
     expect(screen.getByTestId("popoverMan")).toBeInTheDocument();

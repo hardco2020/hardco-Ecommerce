@@ -61,7 +61,7 @@ const Newsletter = () => {
       <Description>Get timely updates from your favorite products</Description>
       <InputContainer>
         <Input placeholder="Your email" />
-        <Button onClick={handleClickOpen}>
+        <Button role="popupButton" onClick={handleClickOpen}>
           <Send />
         </Button>
       </InputContainer>
@@ -71,8 +71,9 @@ const Newsletter = () => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        role="popup"
       >
-        <Email />
+        <Email handleClose={handleClose} />
       </Dialog>
     </Container>
   );

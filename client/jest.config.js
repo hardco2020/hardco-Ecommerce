@@ -15,6 +15,7 @@ module.exports = {
     "!src/components/chatbot/Chatbot.tsx",
     "!src/index.tsx",
     "!src/components/stripe/Stripe.tsx",
+    "!src/pages/**/*.tsx",
   ],
   coverageDirectory: "coverage",
   testPathIgnorePatterns: ["/node_modules/"],
@@ -28,6 +29,11 @@ module.exports = {
     },
   },
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
+  moduleNameMapper: {
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
+      "<rootDir>/__mocks__/fileMock.js",
+    "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+  },
   // collectCoverageFrom: ["**/*.{ts,tsx}"],
   // coveragePathIgnorePatterns: [
   //   "/node_modules/",

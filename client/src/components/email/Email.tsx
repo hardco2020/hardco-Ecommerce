@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Close } from "@material-ui/icons";
 
 const Image = styled.img`
   width: 100%;
@@ -71,12 +72,20 @@ const ContactContainer = styled.div`
   align-items: center;
 `;
 
-const Email = () => {
+interface EmailProp {
+  handleClose: () => void;
+}
+const Email = ({ handleClose }: EmailProp) => {
   return (
     <Container>
       <TitleContainer>
         <Logo src="https://i.imgur.com/IkMtJPR.png" />
-        <LogoTitle>HardoCo-Ecommerce</LogoTitle>
+        <LogoTitle role="logoTitle">HardoCo-Ecommerce</LogoTitle>
+        <Close
+          data-testid="close"
+          onClick={handleClose}
+          style={{ cursor: "pointer" }}
+        />
       </TitleContainer>
       <LineContainer>
         <Line />

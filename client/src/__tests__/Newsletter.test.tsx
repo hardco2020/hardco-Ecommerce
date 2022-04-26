@@ -1,7 +1,14 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Newsletter from "../components/newsletter/Newsletter";
+import { BrowserRouter as Router } from "react-router-dom";
 
-beforeEach(() => render(<Newsletter />));
+beforeEach(() =>
+  render(
+    <Router>
+      <Newsletter />
+    </Router>
+  )
+);
 describe("Render components", () => {
   test("Render", () => {
     // Title
@@ -13,5 +20,24 @@ describe("Render components", () => {
     expect(placeholder).toBeInTheDocument();
   });
 
-  test("Click send button should open dialog", () => {});
+  test("Click send button should open dialog", async () => {
+    // First we should not see any dialog
+    expect(screen.queryByRole("popup")).not.toBeInTheDocument();
+    const button = screen.getByRole("popupButton");
+    fireEvent.click(button);
+    // After click the button we can see dialog popup
+    expect(screen.queryByRole("popup")).toBeInTheDocument();
+
+    // Confirm rendering inside popup
+    expect(screen.queryByRole("logoTitle")).toBeInTheDocument();
+
+    // Close popup
+    const closeButton = screen.getByTestId("close");
+
+    fireEvent.click(closeButton);
+
+    await waitFor(() =>
+      expect(screen.queryByRole("popup")).not.toBeInTheDocument()
+    );
+  });
 });
